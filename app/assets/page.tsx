@@ -1,7 +1,7 @@
 import Image from "next/image";
-import Circles from "../components/Circles";
-import Navbar from "../components/Navbar";
-import Card from "../components/Card";
+import Circles from "../../components/shared/Circles";
+import Navbar from "../../components/shared/Navbar";
+import Card from "../../components/shared/Card";
 
 export default function AssetsList() {
   return (

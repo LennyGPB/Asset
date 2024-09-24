@@ -20,6 +20,8 @@ const config = {
     extend: {
       colors: {
         purple: "#8A0AF9",
+        purpleLight: "#A56FF4",
+        purpleDark: "#7B16FF",
       },
       keyframes: {
         "accordion-down": {
@@ -61,10 +63,10 @@ const config = {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "shine": "shine 2s linear infinite",
+        shine: "shine 2s linear infinite",
         "spin-around": "spin-around calc(var(--speed) * 2) infinite linear",
-        "slide": "slide var(--speed) ease-in-out infinite alternate",  
-        "meteor": "meteor 5s linear infinite",     
+        slide: "slide var(--speed) ease-in-out infinite alternate",
+        meteor: "meteor 5s linear infinite",
       },
     },
   },
