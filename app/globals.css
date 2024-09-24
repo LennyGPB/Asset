@@ -17,3 +17,13 @@ body {
   font-family: var(--font-geist-sans);
   overflow-x: hidden;
 }
+
+@layer utilities {
+  .wrapper {
+    @apply max-w-6xl lg:mx-auto p-5 md:px-10 xl:px-0 w-full;
+  }
+
+  .button {
+    @apply bg-gradient-to-t from-purple to-purpleLight;
+  }
+}

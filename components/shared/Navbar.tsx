@@ -3,7 +3,7 @@ import Image from "next/image";
 export default function Navbar() {
   return (
     <>
-      <nav className="flex flex-col text-white mt-4 mx-5">
+      <nav className="wrapper flex flex-col text-white ">
         <div className="relative justify-between flex items-center">
           <p className="text-2xl">ASSETS LOGO</p>
 
@@ -16,15 +16,9 @@ export default function Navbar() {
           <div className="flex gap-3">
             <a
               href="/d"
-              className="text-center p-1 w-36 bg-purple rounded-md tracking-wider uppercase"
+              className="text-center p-1 w-36 button rounded-md tracking-wider uppercase"
             >
               Se connecter
-            </a>
-            <a
-              href="/d"
-              className="text-center p-1 w-36 bg-purple rounded-md tracking-wider uppercase"
-            >
-              S'inscrire
             </a>
           </div>
         </div>

@@ -7,14 +7,74 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Categorie {
+  id_categorie Int      @id @default(autoincrement())
+  nom          String   @db.VarChar(50)
+  assets       Asset[]  @relation("appartient") // Relation avec Asset
+  tags         Tags[]   @relation("est_lie")    // Relation avec Tags
+}
+
+model Tags {
+  id_tags     Int      @id @default(autoincrement())
+  nom         String   @db.VarChar(50)
+  categories  Categorie[] @relation("est_lie")  // Relation avec Categorie
+}
+
+model Medias {
+  id_media Int      @id @default(autoincrement())
+  url      String   @db.VarChar(255)
+  assets   Asset[]  @relation("possede")        // Relation avec Asset
+}
+
+model Asset {
+  id_asset         Int        @id @default(autoincrement())
+  file_url         String     @db.VarChar(255)
+  file_type        String     @db.VarChar(50)
+  file_size        Decimal    @db.Decimal(15, 2)
+  titre            String     @db.VarChar(50)
+  description      String     @db.Text
+  prix             Decimal    @db.Decimal(15, 2)
+  likes            Int        @default(0)
+  nb_dl            Int        @default(0)
+  slogan           String?    @db.VarChar(50)
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+  image_couverture String?    @db.VarChar(50)
+
+  userId           Int
+  user             User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  categorieId      Int?
+  categorie        Categorie? @relation("appartient", fields: [categorieId], references: [id_categorie])
+
+  medias           Medias[]   @relation("possede")  // Relation avec Medias
+
+  // Nouvelle relation pour posséder des assets
+  owners           Possession[]
+}
+
 model User {
   id            Int       @id @default(autoincrement())
   name          String?
   email         String?   @unique
   emailVerified DateTime?
   image         String?
+  role          String    @default("user")
   accounts      Account[] 
   sessions      Session[] 
+  assets        Asset[]   // Relation pour poster un Asset
+  ownedAssets   Possession[]
+}
+
+model Possession {
+  id            Int    @id @default(autoincrement())
+  userId        Int
+  assetId       Int
+
+  user          User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  asset         Asset  @relation(fields: [assetId], references: [id_asset], onDelete: Cascade)
+
+  @@unique([userId, assetId])
 }
 
 model Account {
@@ -52,3 +112,25 @@ model VerificationToken {
 
   @@unique([identifier, token])
 }
+
+model appartient {
+  id_asset     Int
+  id_categorie Int
+
+  @@id([id_asset, id_categorie])
+}
+
+model est_lie {
+  id_categorie Int
+  id_tags      Int
+
+  @@id([id_categorie, id_tags])
+}
+
+model possede {
+  id_asset Int
+  id_media Int
+
+  @@id([id_asset, id_media])
+}
+
