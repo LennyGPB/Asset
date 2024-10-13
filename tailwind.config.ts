@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+const flowbite = require("flowbite-react/tailwind");
 
 const config = {
   darkMode: ["class"],
@@ -7,6 +8,7 @@ const config = {
     "./components/**/*.{ts,tsx}",
     "./app/**/*.{ts,tsx}",
     "./src/**/*.{ts,tsx}",
+    flowbite.content(),
   ],
   prefix: "",
   theme: {
@@ -22,6 +24,7 @@ const config = {
         purple: "#8A0AF9",
         purpleLight: "#A56FF4",
         purpleDark: "#7B16FF",
+        blackA: "#151515",
       },
       keyframes: {
         "accordion-down": {
@@ -70,7 +73,7 @@ const config = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"), flowbite.plugin()],
 } satisfies Config;
 
 export default config;
