@@ -7,30 +7,32 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Categorie {
-  id_categorie Int      @id @default(autoincrement())
-  nom          String   @db.VarChar(50)
-  assets       Asset[]  @relation("appartient") // Relation avec Asset
-  tags         Tags[]   @relation("est_lie")    // Relation avec Tags
-}
-
-model Tags {
-  id_tags     Int      @id @default(autoincrement())
-  nom         String   @db.VarChar(50)
-  categories  Categorie[] @relation("est_lie")  // Relation avec Categorie
-}
-
 model Medias {
   id_media Int      @id @default(autoincrement())
   url      String   @db.VarChar(255)
   assets   Asset[]  @relation("possede")        // Relation avec Asset
 }
 
+model Categorie {
+  id_categorie Int      @id @default(autoincrement())
+  nom          String   @db.VarChar(50)
+  assets       Asset[]  @relation("appartient") // Relation avec Asset
+  tags         Tags[]    @relation("CategorieTags") // Relation avec Tags
+}
+
+model Tags {
+  id_tags     Int      @id @default(autoincrement())
+  nom         String   @db.VarChar(50)
+  assets      AssetTags[] @relation("TagAssets") // Relation avec Asset
+  categorieId Int // Champ pour la relation avec Categorie
+  categorie   Categorie @relation("CategorieTags", fields: [categorieId], references: [id_categorie]) // Relation avec Categorie
+}
+
 model Asset {
   id_asset         Int        @id @default(autoincrement())
-  file_url         String     @db.VarChar(255)
-  file_type        String     @db.VarChar(50)
-  file_size        Decimal    @db.Decimal(15, 2)
+  file_url         String?     @db.VarChar(255)
+  //file_type        String?     @db.VarChar(50)
+  file_size        Decimal?    @db.Decimal(15, 2)
   titre            String     @db.VarChar(50)
   description      String     @db.Text
   prix             Decimal    @db.Decimal(15, 2)
@@ -39,18 +41,26 @@ model Asset {
   slogan           String?    @db.VarChar(50)
   createdAt        DateTime   @default(now())
   updatedAt        DateTime   @updatedAt
-  image_couverture String?    @db.VarChar(50)
+  image_couverture String?    @db.VarChar(255)
 
-  userId           Int
-  user             User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId           Int?
+  user             User?       @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   categorieId      Int?
   categorie        Categorie? @relation("appartient", fields: [categorieId], references: [id_categorie])
 
   medias           Medias[]   @relation("possede")  // Relation avec Medias
-
-  // Nouvelle relation pour posséder des assets
+  tags             AssetTags[]
   owners           Possession[]
+}
+
+model AssetTags {
+  assetId  Int
+  tagId    Int
+  asset    Asset @relation(fields: [assetId], references: [id_asset])
+  tag      Tags  @relation(fields: [tagId], references: [id_tags], name: "TagAssets") // Ajout du nom de la relation
+
+  @@id([assetId, tagId]) // Clé primaire composée
 }
 
 model User {
@@ -58,6 +68,7 @@ model User {
   name          String?
   email         String?   @unique
   emailVerified DateTime?
+  password      String?
   image         String?
   role          String    @default("user")
   accounts      Account[] 
@@ -113,24 +124,24 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-model appartient {
-  id_asset     Int
-  id_categorie Int
+// model appartient {
+//   id_asset     Int
+//   id_categorie Int
 
-  @@id([id_asset, id_categorie])
-}
+//   @@id([id_asset, id_categorie])
+// }
 
-model est_lie {
-  id_categorie Int
-  id_tags      Int
+// model est_lie {
+//   id_categorie Int
+//   id_tags      Int
 
-  @@id([id_categorie, id_tags])
-}
+//   @@id([id_categorie, id_tags])
+// }
 
-model possede {
-  id_asset Int
-  id_media Int
+// model possede {
+//   id_asset Int
+//   id_media Int
 
-  @@id([id_asset, id_media])
-}
+//   @@id([id_asset, id_media])
+// }
 

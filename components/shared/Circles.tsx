@@ -3,14 +3,14 @@ import Image from "next/image";
 export default function Circles() {
   return (
     <>
-      <div className="flex justify-center gap-10 mt-10">
+      <div className="flex justify-center gap-5 sm:gap-10 mt-10 sm:mt-10">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
           stroke-width="1.5"
           stroke="currentColor"
-          className="size-16 bg-white rounded-full p-2"
+          className="size-14 sm:size-16 bg-white rounded-full p-2"
           aria-labelledby="3D"
         >
           <title id="svg1Title">3D</title>
@@ -27,7 +27,7 @@ export default function Circles() {
           viewBox="0 0 24 24"
           stroke-width="1.5"
           stroke="currentColor"
-          className="size-16 bg-white rounded-full p-2"
+          className="size-14 sm:size-16 bg-white rounded-full p-2"
         >
           <title id="svg1Title">Animation</title>
           <path
@@ -43,7 +43,7 @@ export default function Circles() {
           viewBox="0 0 24 24"
           stroke-width="1.5"
           stroke="currentColor"
-          className="size-16 bg-white rounded-full p-2"
+          className="size-14 sm:size-16 bg-white rounded-full p-2"
         >
           <title id="svg1Title">Graphisme</title>
           <path
@@ -59,7 +59,7 @@ export default function Circles() {
           viewBox="0 0 24 24"
           stroke-width="1.5"
           stroke="currentColor"
-          className="size-16 bg-white rounded-full p-2"
+          className="size-14 sm:size-16 bg-white rounded-full p-2"
         >
           <title id="svg1Title">Music</title>
           <path
@@ -75,7 +75,7 @@ export default function Circles() {
           viewBox="0 0 24 24"
           stroke-width="1.5"
           stroke="currentColor"
-          className="size-16 bg-white rounded-full p-2"
+          className="size-14 sm:size-16 bg-white rounded-full p-2"
         >
           <title id="svg1Title">Developpement</title>
           <path
@@ -91,7 +91,7 @@ export default function Circles() {
           viewBox="0 0 24 24"
           stroke-width="1.5"
           stroke="currentColor"
-          className="size-16 bg-white rounded-full p-2"
+          className="hidden sm:block size-14 sm:size-16 bg-white rounded-full p-2"
         >
           <title id="svg1Title">Autres</title>
           <path
