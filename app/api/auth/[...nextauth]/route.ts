@@ -40,24 +40,10 @@ export const authOptions: AuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   adapter: PrismaAdapter(prisma),
   callbacks: {
-    async signIn({
-      user,
-      account,
-      profile,
-    }: {
-      user: User | AdapterUser;
-      account: Account | null;
-      profile?: Profile;
-    }) {
+    async signIn({ user, account, profile,}: { user: User | AdapterUser; account: Account | null; profile?: Profile; }) {
       return true; // Autorise la connexion
     },
-    async session({
-      session,
-      user,
-    }: {
-      session: Session;
-      user: User | AdapterUser;
-    }) {
+    async session({ session, user, }: { session: Session; user: User | AdapterUser; }) {
       if (session.user) {
         session.user.id = user.id.toString();
       }

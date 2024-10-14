@@ -52,15 +52,7 @@ model Asset {
   medias           Medias[]   @relation("possede")  // Relation avec Medias
   tags             AssetTags[]
   owners           Possession[]
-}
-
-model AssetTags {
-  assetId  Int
-  tagId    Int
-  asset    Asset @relation(fields: [assetId], references: [id_asset])
-  tag      Tags  @relation(fields: [tagId], references: [id_tags], name: "TagAssets") // Ajout du nom de la relation
-
-  @@id([assetId, tagId]) // Clé primaire composée
+  assetLikes       Likes[]
 }
 
 model User {
@@ -75,6 +67,28 @@ model User {
   sessions      Session[] 
   assets        Asset[]   // Relation pour poster un Asset
   ownedAssets   Possession[]
+  likes         Likes[] 
+}
+
+model Likes {
+  id         Int      @id @default(autoincrement())
+  userId     Int      // Clé étrangère vers l'utilisateur
+  assetId    Int      // Clé étrangère vers l'asset
+  createdAt  DateTime @default(now())
+
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  asset      Asset    @relation(fields: [assetId], references: [id_asset], onDelete: Cascade)
+
+  @@unique([userId, assetId])  // Empêche les doublons : un utilisateur ne peut liker un asset qu'une fois
+}
+
+model AssetTags {
+  assetId  Int
+  tagId    Int
+  asset    Asset @relation(fields: [assetId], references: [id_asset])
+  tag      Tags  @relation(fields: [tagId], references: [id_tags], name: "TagAssets") // Ajout du nom de la relation
+
+  @@id([assetId, tagId]) // Clé primaire composée
 }
 
 model Possession {
