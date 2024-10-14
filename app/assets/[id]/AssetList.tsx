@@ -17,6 +17,7 @@ interface Asset {
   prix: number;
   description: string;
   tags : Tag[];
+  likes: number;
 }
 
 interface AssetsListProps {
@@ -115,6 +116,7 @@ export default function AssetsList({ assets, tags }: AssetsListProps) {
               titre={asset.titre}
               prix={asset.prix}
               description={asset.description}
+              likes={asset.likes}
               id={asset.id_asset}
             />
           ))

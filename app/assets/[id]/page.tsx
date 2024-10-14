@@ -16,14 +16,14 @@ export default async function Page({ params }: { params: { id: string } }) {
           tag: true,
         },
       },
-    },
+    } ,
   });
 
   const tags = await prisma.tags.findMany({
     where: {
       categorieId: categoryId, // Filtre par catégorie
     },
-  });
+  })  ;
 
 
   const assetTags = assets.flatMap(asset => asset.tags.map(tagRelation => tagRelation.tag));
