@@ -15,9 +15,9 @@ const geistMono = localFont({
   weight: "100 900",
 });
 
-const Raleway = localFont({
-  src: "./fonts/Raleway-VariableFont_wght.ttf",
-  variable: "--font-raleway",
+const Venite = localFont({
+  src: "./fonts/VeniteAdoremus-rgRBA.ttf",
+  variable: "--font-venite",
   weight: "100 900",
 });
 
@@ -30,7 +30,7 @@ export default function RootLayout({
     <html lang="en">
       <SessionProvider>
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          className={`${geistSans.variable} ${geistMono.variable} ${Venite.variable} antialiased`}
         >
           {children}
         </body>

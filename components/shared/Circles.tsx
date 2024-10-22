@@ -1,16 +1,18 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Circles() {
   return (
     <>
       <div className="flex justify-center gap-5 sm:gap-10 mt-10 sm:mt-10">
+        <Link href={`/assets/3D`}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
           stroke-width="1.5"
           stroke="currentColor"
-          className="size-14 sm:size-16 bg-white rounded-full p-2"
+          className="size-14 sm:size-16 bg-white rounded-full p-2 hover:scale-105 transition-all duration-500"
           aria-labelledby="3D"
         >
           <title id="svg1Title">3D</title>
@@ -18,8 +20,10 @@ export default function Circles() {
             stroke-linecap="round"
             stroke-linejoin="round"
             d="m21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9"
-          />
-        </svg>
+            />
+          </svg>
+        </Link>
+
 
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -27,7 +31,7 @@ export default function Circles() {
           viewBox="0 0 24 24"
           stroke-width="1.5"
           stroke="currentColor"
-          className="size-14 sm:size-16 bg-white rounded-full p-2"
+          className="size-14 sm:size-16 bg-white rounded-full p-2 hover:scale-105 transition-all duration-500"
         >
           <title id="svg1Title">Animation</title>
           <path
@@ -43,7 +47,7 @@ export default function Circles() {
           viewBox="0 0 24 24"
           stroke-width="1.5"
           stroke="currentColor"
-          className="size-14 sm:size-16 bg-white rounded-full p-2"
+          className="size-14 sm:size-16 bg-white rounded-full p-2 hover:scale-105 transition-all duration-500"
         >
           <title id="svg1Title">Graphisme</title>
           <path
@@ -59,7 +63,7 @@ export default function Circles() {
           viewBox="0 0 24 24"
           stroke-width="1.5"
           stroke="currentColor"
-          className="size-14 sm:size-16 bg-white rounded-full p-2"
+          className="size-14 sm:size-16 bg-white rounded-full p-2 hover:scale-105 transition-all duration-500"
         >
           <title id="svg1Title">Music</title>
           <path
@@ -75,7 +79,7 @@ export default function Circles() {
           viewBox="0 0 24 24"
           stroke-width="1.5"
           stroke="currentColor"
-          className="size-14 sm:size-16 bg-white rounded-full p-2"
+          className="size-14 sm:size-16 bg-white rounded-full p-2 hover:scale-105 transition-all duration-500"
         >
           <title id="svg1Title">Developpement</title>
           <path
@@ -91,7 +95,7 @@ export default function Circles() {
           viewBox="0 0 24 24"
           stroke-width="1.5"
           stroke="currentColor"
-          className="hidden sm:block size-14 sm:size-16 bg-white rounded-full p-2"
+          className="hidden sm:block size-14 sm:size-16 bg-white rounded-full p-2 hover:scale-105 transition-all duration-500"
         >
           <title id="svg1Title">Autres</title>
           <path

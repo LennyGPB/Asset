@@ -1,16 +1,45 @@
-import Image from "next/image";
+"use client";
+
 import Card from "../Card";
+import { useState, useEffect } from "react";
+
+interface Asset {
+  id_asset: number;
+  image_couverture: string | null;
+  file_url: string | null;
+  titre: string;
+  prix: number;
+  description: string;
+  likes: number;
+}
+
 
 export default function S2_home() {
+ const [popularAssets, setPopularAssets] = useState<Asset[]>();
+
+  useEffect(() => {
+    fetchPopularAssets();
+  }, []);
+
+  const fetchPopularAssets = async () => {
+    try {
+      const response = await fetch('/api/assets/popularAsset');
+      const data = await response.json();
+      setPopularAssets(data);
+    } catch (error) {
+      console.error('Error fetching popular assets:', error);
+    }
+  };
+
   return (
     <>
-      <h1 className="text-white text-center text-4xl uppercase mt-20 mb-10 tracking-[4px]">
+      <h1 className="text-white text-center text-4xl uppercase mt-20 mb-10 tracking-[10px] title">
         Assets Populaire
       </h1>
       <div className="flex justify-center flex-wrap gap-2 sm:gap-10">
-        <Card />
-        <Card />
-        <Card />
+        {popularAssets && popularAssets.map((asset) => (
+          <Card key={asset.id_asset} lienImage={asset.image_couverture ?? ""} titre={asset.titre} prix={asset.prix} description={asset.description} id={asset.id_asset} likes={asset.likes} />
+        ))}
       </div>
     </>
   );

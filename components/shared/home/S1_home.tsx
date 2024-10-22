@@ -8,8 +8,8 @@ import Meteors from "@/components/magicui/meteors";
 export default function S1_home() {
   return (
     <>
-      <section className="md:wrapper mb-4">
-        <h1 className="text-4xl md:text-5xl text-white tracking-widest text-center mt-14 sm:mt-24">
+      <section className="md:wrapper mb-4 sm:mt-2">
+        <h1 className="text-4xl md:text-5xl text-white tracking-[10px] text-center mt-14 sm:mt-24 title">
           ASSETS STORE
         </h1>
 
@@ -27,7 +27,7 @@ export default function S1_home() {
             borderRadius="15px"
             shimmerSize="0.15em"
             shimmerColor="#8A0AF9"
-            className="shadow-md shadow-white"
+            className="shadow-md shadow-white hover:scale-105 transition-transform duration-300 ease-in-out"
           >
             <span className="uppercase tracking-[4px] whitespace-pre-wrap text-center font-bold leading-none text-black text-xl">
               Rejoindre le discord
@@ -36,7 +36,7 @@ export default function S1_home() {
         </div>
       </section>
 
-      <ScrollTextEffect />
+      <ScrollTextEffect  />
       <Meteors number={30} />
     </>
   );

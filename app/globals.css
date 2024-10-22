@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -10,6 +11,7 @@
 :root {
   --background: #151515;
   --font-geist-sans: "Geist Sans", sans-serif;
+  --font-venite: "Venite", sans-serif;
 }
 
 body {
@@ -26,4 +28,8 @@ body {
   .button {
     @apply bg-gradient-to-t from-purple to-purpleLight;
   }
+}
+
+.title {
+  font-family: var(--font-venite);
 }
