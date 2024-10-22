@@ -3,6 +3,8 @@
 import { useState } from "react";
 import Navbar from "../../../components/shared/Navbar";
 import Card from "../../../components/shared/Card";
+import Meteors from "@/components/magicui/meteors";
+import ScrollTextEffectOne from "@/components/shared/ScrollTextEffectOne";
 
 interface Tag {
   id_tags: number;
@@ -23,9 +25,10 @@ interface Asset {
 interface AssetsListProps {
   assets: Asset[];
   tags: Tag[];
+  categorie: string;
 }
 
-export default function AssetsList({ assets, tags }: AssetsListProps) {
+export default function AssetsList({ assets, tags, categorie }: AssetsListProps) {
   const [selectedTag, setSelectedTag] = useState<number | null>(null);
   const [selectedPrice, setSelectedPrice] = useState<number | null>(null);
   const [filteredAssets, setFilteredAssets] = useState<Asset[]>(assets);
@@ -62,9 +65,10 @@ export default function AssetsList({ assets, tags }: AssetsListProps) {
   return (
     <>
       <Navbar />
-      <h2 className="text-white text-center text-4xl mt-10 tracking-widest uppercase">
-        Modelisation 3D
-      </h2>
+
+
+      <ScrollTextEffectOne text={categorie + " -"} size="3xl" />
+
       <div className="flex flex-wrap justify-center items-center gap-3 sm:gap-7 mt-5">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -72,7 +76,7 @@ export default function AssetsList({ assets, tags }: AssetsListProps) {
           viewBox="0 0 24 24"
           strokeWidth="1.5"
           stroke="currentColor"
-          className="size-16 bg-purple rounded-full p-2"
+          className="size-16 button opacity-70 rounded-full p-2 hover:opacity-100 hover:scale-105 transition-all duration-300"
           aria-labelledby="3D"
         >
           <title id="svg1Title">3D</title>
@@ -83,31 +87,29 @@ export default function AssetsList({ assets, tags }: AssetsListProps) {
           />
         </svg>
 
-        <select
-          className="bg-white w-40 h-10 text-black rounded-md"
-          onChange={handleTagChange}
-          value={selectedTag || ""}
-        >
+        <select className="bg-white tracking-widest w-48 h-10 text-black font-bold border-2 border-black rounded-md focus:border-purple hover:scale-105 transition-all duration-300" onChange={handleTagChange} value={selectedTag || ""}>
           <option value="">Tous les tags</option>
           {tags.map(tag => (
             <option key={tag.id_tags} value={tag.id_tags}>{tag.nom}</option>
           ))}
         </select>
-        <select className="bg-white w-40 h-10 text-black rounded-md" onChange={handlePriceChange}>
+
+        <select className="bg-white tracking-widest w-48 h-10 text-black font-bold border-2 border-black rounded-md focus:border-purple hover:scale-105 transition-all duration-300" onChange={handlePriceChange} >
           <option value="10">- 10 euros</option>
           <option value="100">- 100 euros</option>
           <option value="1000">- 1000 euros</option>
         </select>
-        <select className="bg-white w-40 h-10 text-black rounded-md">
+
+        <select className="bg-white tracking-widest w-48 h-10 text-black font-bold border-2 border-black rounded-md focus:border-purple hover:scale-105 transition-all duration-300" >
           <option value="option1">Bien noté</option>
           <option value="option2">Meilleurs Ventes</option>
-          <option value="option3">Caca</option>
         </select>
+
       </div>
 
-      <div className="flex flex-wrap justify-center sm:gap-7">
+      <div className="flex flex-wrap justify-center sm:gap-10">
         {filteredAssets.length === 0 ? (
-          <div>Aucun asset trouvé</div>
+          <div className="text-white text-center text-2xl mt-10 tracking-widest">Aucun asset trouvé</div>
         ) : (
           filteredAssets.map((asset) => (
             <Card
@@ -122,6 +124,8 @@ export default function AssetsList({ assets, tags }: AssetsListProps) {
           ))
         )}
       </div>
+      <Meteors number={30} />
     </>
+     
   );
 }

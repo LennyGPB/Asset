@@ -23,10 +23,16 @@ export default async function Page({ params }: { params: { id: string } }) {
     where: {
       categorieId: categoryId, // Filtre par catégorie
     },
-  })  ;
+  });
+
+  const categorie = await prisma.categorie.findUnique({
+    where: {
+      id_categorie: categoryId,
+    },
+  });
 
 
   const assetTags = assets.flatMap(asset => asset.tags.map(tagRelation => tagRelation.tag));
 
-  return <AssetsList assets={assets} tags={tags} />;
+  return <AssetsList assets={assets} tags={tags} categorie={categorie.nom} />;
 }

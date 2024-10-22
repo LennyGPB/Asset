@@ -16,7 +16,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method === 'POST') {
     try {
       // Vérifiez si l'utilisateur a déjà liké cet asset
-      const existingLike = await prisma.like.findUnique({
+      const existingLike = await prisma.likes.findUnique({
         where: {
           userId_assetId: {
             userId: Number(session.user.id),
@@ -27,7 +27,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       if (existingLike) {
         // Si le like existe, le retirer
-        await prisma.like.delete({
+        await prisma.likes.delete({
           where: {
             id: existingLike.id, // Assurez-vous que `id` existe dans votre modèle
           },
@@ -42,7 +42,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(200).json({ message: 'Like removed successfully.' });
       } else {
         // Sinon, ajouter un nouveau like
-        await prisma.like.create({
+        await prisma.likes.create({
           data: {
             userId: Number(session.user.id),
             assetId: Number(assetId),

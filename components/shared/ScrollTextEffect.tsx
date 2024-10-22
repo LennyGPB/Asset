@@ -6,9 +6,9 @@ export default function ScrollTextEffect() {
     <>
       <div>
         <VelocityScroll
-          text="- 3D - DESIGN - MUSIC  "
+          text="- 3D - DESIGN - MUSIC - ART "
           default_velocity={1}
-          className="font-display text-center text-4xl font-bold tracking-widest text-white drop-shadow-sm dark:text-white"
+          className="font-display text-center text-4xl font-bold tracking-widest text-white drop-shadow-sm dark:text-white title"
         />
       </div>
     </>

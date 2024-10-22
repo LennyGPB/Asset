@@ -3,6 +3,7 @@
 import Navbar from "../../components/shared/Navbar";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
+import Meteors from "@/components/magicui/meteors";
 
 interface Categorie {
   id_categorie: number;
@@ -11,12 +12,14 @@ interface Categorie {
 
 interface Tags {
   id_tags: number;
+  categorieId: number;
   nom: string;
 }
 
 export default function FormAsset() {
   const [categories, setCategories] = useState<Categorie[]>([]);
   const [tags, setTags] = useState<Tags[]>([]);
+  const [tagsFilter, setTagsFilter] = useState<Tags[]>([]);
   const { data: session } = useSession();
 
   type FormDataType = {
@@ -46,6 +49,27 @@ export default function FormAsset() {
   });
 
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [categoriesResponse, tagsResponse] = await Promise.all([
+          fetch("/api/categories/categories"),
+          fetch("/api/tags/tags"),
+        ]);
+
+        const categoriesData = await categoriesResponse.json();
+        const tagsData = await tagsResponse.json();
+
+        setCategories(categoriesData);
+        setTags(tagsData);
+      } catch (error) {
+        console.error("Erreur lors du chargement des données", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
     if (session) {
       setFormData((prevData) => ({
         ...prevData,
@@ -54,11 +78,16 @@ export default function FormAsset() {
     }
   }, [session]);
 
-  const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
-  ) => {
+  useEffect(() => {
+    if (formData.categorieId) {
+      const filterTags = tags.filter(
+        (tag) => Number(tag.categorieId) === parseInt(formData.categorieId)
+      );
+      setTagsFilter(filterTags);
+    }
+  }, [formData.categorieId, tags]); 
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target; // Extraire le nom et la valeur de l'élément
     setFormData((prevFormData) => ({
       ...prevFormData,
@@ -153,7 +182,7 @@ export default function FormAsset() {
     formDataToSend.append("userId", formData.userId.toString());
 
     try {
-      const response = await fetch("/api/createAsset", {
+      const response = await fetch("/api/assets/createAsset", {
         method: "POST",
         body: formDataToSend,
       });
@@ -172,44 +201,25 @@ export default function FormAsset() {
     }
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [categoriesResponse, tagsResponse] = await Promise.all([
-          fetch("/api/categories"),
-          fetch("/api/tags"),
-        ]);
 
-        const categoriesData = await categoriesResponse.json();
-        const tagsData = await tagsResponse.json();
-
-        setCategories(categoriesData);
-        setTags(tagsData);
-      } catch (error) {
-        console.error("Erreur lors du chargement des données", error);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   return (
     <>
       <Navbar />
-      <h1 className="text-white text-center text-4xl tracking-widest font-bold my-10 uppercase">
+      <h1 className="title tracking-[10px] text-white text-center text-4xl font-bold my-10 uppercase">
         Créer son asset
       </h1>
 
       <form onSubmit={handleSubmit} method="POST" encType="multipart/form-data">
-        <div className="mx-auto flex justify-center bg-white rounded-lg w-[900px]">
+        <div className="mx-auto flex justify-center text-white p-7 rounded-lg shadow-lg shadow-white/30 w-[900px] border-2 border-white">
           <div className="flex flex-col">
-            <div className="flex gap-20 justify-center mt-5">
+            <div className="flex gap-20 justify-between mt-5">
               <input
                 type="text"
                 name="titre"
                 value={formData.titre}
                 onChange={handleChange}
-                className="bg-black text-white h-8 w-80 rounded-sm border border-neutral-500 px-2 placeholder:text-white"
+                className="bg-black text-white h-10 w-80 rounded-lg border border-neutral-500 px-2 placeholder:text-white"
                 placeholder="Nom de l'Asset"
               />
 
@@ -217,7 +227,7 @@ export default function FormAsset() {
                 name="categorieId"
                 value={formData.categorieId}
                 onChange={handleChange}
-                className="bg-black text-white h-8 w-40 rounded-lg border border-neutral-500 px-2"
+                className="bg-black text-white h-10 w-60 rounded-lg border border-neutral-500 px-2"
               >
                 <option value="" disabled hidden>
                   Catégorie
@@ -237,7 +247,7 @@ export default function FormAsset() {
                 name="prix"
                 value={formData.prix}
                 onChange={handleChange}
-                className="bg-black text-white h-8 w-20 rounded-sm border border-neutral-500 px-2 placeholder:text-white"
+                className="bg-black text-white h-10 w-24 rounded-lg border border-neutral-500 px-2 placeholder:text-white"
                 placeholder="Prix"
               />
             </div>
@@ -258,12 +268,8 @@ export default function FormAsset() {
               className="bg-black text-white h-40 w-full mt-2 mb-5 rounded-sm border border-neutral-500 px-2 placeholder:text-white"
               placeholder="Description détaillée du produit..."
             />
-          </div>
-        </div>
 
-        <div className="mx-auto flex justify-center bg-white rounded-lg w-[900px] my-3">
-          <div className="flex flex-col">
-            <p className="font-bold tracking-widest">
+            <p className="font-bold text-lg tracking-widest">
               Choisissez jusqu'à 3 tags
             </p>
 
@@ -271,12 +277,12 @@ export default function FormAsset() {
               <select
                 value={formData.tagIds[0]}
                 onChange={(e) => handleTagChange(e, 0)}
-                className="bg-black text-white h-8 w-40 rounded-lg border border-neutral-500 px-2"
+                className="bg-black text-white h-10 w-40 rounded-lg border border-neutral-500 px-2"
               >
                 <option value="" disabled hidden>
-                  Sélectionner un Tag
+                  Tag #1
                 </option>
-                {tags.map((tag) => (
+                {tagsFilter.map((tag) => (
                   <option key={tag.id_tags} value={tag.id_tags}>
                     {tag.nom}
                   </option>
@@ -286,12 +292,12 @@ export default function FormAsset() {
               <select
                 value={formData.tagIds[1]}
                 onChange={(e) => handleTagChange(e, 1)}
-                className="bg-black text-white h-8 w-40 rounded-lg border border-neutral-500 px-2"
+                className="bg-black text-white h-10 w-40 rounded-lg border border-neutral-500 px-2"
               >
                 <option value="" disabled hidden>
-                  Sélectionner un Tag
+                  Tag #2
                 </option>
-                {tags.map((tag) => (
+                {tagsFilter.map((tag) => (
                   <option key={tag.id_tags} value={tag.id_tags}>
                     {tag.nom}
                   </option>
@@ -301,12 +307,12 @@ export default function FormAsset() {
               <select
                 value={formData.tagIds[2]}
                 onChange={(e) => handleTagChange(e, 2)}
-                className="bg-black text-white h-8 w-40 rounded-lg border border-neutral-500 px-2"
+                className="bg-black text-white h-10 w-40 rounded-lg border border-neutral-500 px-2"
               >
                 <option value="" disabled hidden>
-                  Sélectionner un Tag
+                  Tag #3
                 </option>
-                {tags.map((tag) => (
+                {tagsFilter.map((tag) => (
                   <option key={tag.id_tags} value={tag.id_tags}>
                     {tag.nom}
                   </option>
@@ -314,83 +320,76 @@ export default function FormAsset() {
               </select>
             </div>
 
-            <p className="font-bold tracking-widest mt-3">
-              Importer votre image de couverture :
-            </p>
-
+            <p className="font-bold text-lg tracking-widest mt-5">Importer votre image de couverture :</p>
             <div className="flex justify-center">
-              <input
-                name="coverImage"
-                type="file"
-                onChange={handleCoverImageChange}
-                className="bg-black text-white h-8 w-80 mt-5 rounded-sm border border-neutral-500 px-2"
-              />
+              <input name="coverImage" type="file" onChange={handleCoverImageChange} className="bg-black text-white h-10 w-96 mt-5 rounded-sm border border-neutral-500 px-2" />
             </div>
-            <p className="font-bold tracking-widest mt-3">
-              Importer vos images :
-            </p>
 
+            <p className="font-bold text-lg tracking-widest mt-5">Importer vos images :</p>
             <div className="flex justify-center gap-3 flex-wrap">
               <input
                 name="additionalFiles"
                 onChange={(e) => handleAdditionalFilesChange(e)}
                 type="file"
-                className="bg-black text-white h-8 w-60 mt-5 rounded-sm border border-neutral-500 px-2 placeholder:text-white"
+                className="bg-black text-white h-10 w-60 mt-5 rounded-sm border border-neutral-500 px-2 placeholder:text-white"
               />
 
               <input
                 name="additionalFiles"
                 onChange={(e) => handleAdditionalFilesChange(e)}
                 type="file"
-                className="bg-black text-white h-8 w-60 mt-5 rounded-sm border border-neutral-500 px-2 placeholder:text-white"
+                className="bg-black text-white h-10 w-60 mt-5 rounded-sm border border-neutral-500 px-2 placeholder:text-white"
               />
 
               <input
                 name="additionalFiles"
                 onChange={(e) => handleAdditionalFilesChange(e)}
                 type="file"
-                className="bg-black text-white h-8 w-60 mt-5 rounded-sm border border-neutral-500 px-2 placeholder:text-white"
+                className="bg-black text-white h-10 w-60 mt-5 rounded-sm border border-neutral-500 px-2 placeholder:text-white"
               />
 
               <input
                 name="additionalFiles"
                 onChange={(e) => handleAdditionalFilesChange(e)}
                 type="file"
-                className="bg-black text-white h-8 w-60 mt-5 rounded-sm border border-neutral-500 px-2 placeholder:text-white"
+                className="bg-black text-white h-10 w-60 mt-5 rounded-sm border border-neutral-500 px-2 placeholder:text-white"
               />
 
               <input
                 name="additionalFiles"
                 onChange={(e) => handleAdditionalFilesChange(e)}
                 type="file"
-                className="bg-black text-white h-8 w-60 mt-5 rounded-sm border border-neutral-500 px-2 placeholder:text-white"
+                className="bg-black text-white h-10 w-60 mt-5 rounded-sm border border-neutral-500 px-2 placeholder:text-white"
               />
 
               <input
                 name="additionalFiles"
                 onChange={(e) => handleAdditionalFilesChange(e)}
                 type="file"
-                className="bg-black text-white h-8 w-60 mt-5 rounded-sm border border-neutral-500 px-2 placeholder:text-white"
+                className="bg-black text-white h-10 w-60 mt-5 rounded-sm border border-neutral-500 px-2 placeholder:text-white"
               />
             </div>
 
-            <p className="font-bold tracking-widest mt-3">
-              Importer votre dossier :
-            </p>
+            <p className="font-bold text-lg tracking-widest mt-5">Importer votre dossier :</p>
 
             <div className="flex justify-center">
               <input
                 name="assetFile"
                 onChange={handleAssetFileChange}
                 type="file"
-                className="bg-black text-white h-8 w-80 mt-5 rounded-sm border border-neutral-500 px-2 placeholder:text-white"
+                className="bg-black text-white h-10 w-96 mt-5 rounded-sm border border-neutral-500 px-2 placeholder:text-white"
               />
             </div>
+            <button type="submit" className="button text-white font-bold tracking-widest mx-auto h-10 w-60 mt-5 rounded-lg uppercase px-2 hover:scale-105 transition-all duration-500">Confirmer</button>
+          </div>
+        </div>
 
-            <button type="submit">Confirmer</button>
+        <div className="mx-auto flex justify-center bg-white rounded-lg w-[900px] my-3">
+          <div className="flex flex-col">
           </div>
         </div>
       </form>
+      <Meteors number={70} />
     </>
   );
 }

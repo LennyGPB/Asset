@@ -48,6 +48,7 @@ const seed = async () => {
       },
     }); 
 
+
     console.log('Base de données seedée avec succès!');
   } catch (e) {
     console.error(e);
