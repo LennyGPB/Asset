@@ -53,7 +53,7 @@ export default function AssetsList({ assets, tags, categorie }: AssetsListProps)
   
     if (tagId) {
       const filtered = assets.filter(asset => 
-        asset.tags.some(tagRelation => tagRelation.tag.id_tags === tagId)
+        asset.tags.some(tag => tag.id_tags === tagId)
       );
       setFilteredAssets(filtered);
     } else {
