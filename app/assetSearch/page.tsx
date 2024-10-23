@@ -1,13 +1,13 @@
 "use client";
 
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import Card from '@/components/shared/Card';
 import Navbar from '@/components/shared/Navbar';
 
-export default function SearchResults() {
+function SearchResultsContent() {
   const searchParams = useSearchParams();
-  const query = searchParams?.get('query') ?? '';// Récupère le query de l'URL
+  const query = searchParams?.get('query') ?? ''; // Récupère le query de l'URL
   const [assets, setAssets] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -56,5 +56,13 @@ export default function SearchResults() {
         )}
       </div>
     </>
+  );
+}
+
+export default function SearchResults() {
+  return (
+    <Suspense fallback={<div>Chargement en cours...</div>}>
+      <SearchResultsContent />
+    </Suspense>
   );
 }
