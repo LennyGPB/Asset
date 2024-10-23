@@ -16,8 +16,15 @@ export default async function Page({ params }: { params: { id: string } }) {
           tag: true,
         },
       },
-    } ,
+    },
   });
+
+  // Convertir les `Decimal` en `number` et simplifier la structure des `tags`
+  const assetsWithTransformedTags = assets.map(asset => ({
+    ...asset,
+    prix: Number(asset.prix), // Conversion de Decimal en number
+    tags: asset.tags.map(tagRelation => tagRelation.tag), // Extraire uniquement le `tag`
+  }));
 
   const tags = await prisma.tags.findMany({
     where: {
@@ -31,8 +38,5 @@ export default async function Page({ params }: { params: { id: string } }) {
     },
   });
 
-
-  const assetTags = assets.flatMap(asset => asset.tags.map(tagRelation => tagRelation.tag));
-
-  return <AssetsList assets={assets} tags={tags} categorie={categorie.nom} />;
+  return <AssetsList assets={assetsWithTransformedTags} tags={tags} categorie={categorie?.nom ?? ''} />;
 }
