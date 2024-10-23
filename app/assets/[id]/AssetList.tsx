@@ -76,7 +76,7 @@ export default function AssetsList({ assets, tags, categorie }: AssetsListProps)
           viewBox="0 0 24 24"
           strokeWidth="1.5"
           stroke="currentColor"
-          className="size-16 button opacity-70 rounded-full p-2 hover:opacity-100 hover:scale-105 transition-all duration-300"
+          className="hidden sm:block size-16 button opacity-70 rounded-full p-2 hover:opacity-100 hover:scale-105 transition-all duration-300"
           aria-labelledby="3D"
         >
           <title id="svg1Title">3D</title>
@@ -87,20 +87,20 @@ export default function AssetsList({ assets, tags, categorie }: AssetsListProps)
           />
         </svg>
 
-        <select className="bg-white tracking-widest w-48 h-10 text-black font-bold border-2 border-black rounded-md focus:border-purple hover:scale-105 transition-all duration-300" onChange={handleTagChange} value={selectedTag || ""}>
-          <option value="">Tous les tags</option>
+        <select className="bg-white tracking-widest w-36 sm:w-48 h-10 text-sm sm:text-base text-black font-bold border-2 border-black rounded-md focus:border-purple hover:scale-105 transition-all duration-300" onChange={handleTagChange} value={selectedTag || ""}>
+          <option value="">Les tags</option>
           {tags.map(tag => (
             <option key={tag.id_tags} value={tag.id_tags}>{tag.nom}</option>
           ))}
         </select>
 
-        <select className="bg-white tracking-widest w-48 h-10 text-black font-bold border-2 border-black rounded-md focus:border-purple hover:scale-105 transition-all duration-300" onChange={handlePriceChange} >
+        <select className="bg-white tracking-widest w-36 sm:w-48 h-10 text-sm sm:text-base text-black font-bold border-2 border-black rounded-md focus:border-purple hover:scale-105 transition-all duration-300" onChange={handlePriceChange} >
           <option value="10">- 10 euros</option>
           <option value="100">- 100 euros</option>
           <option value="1000">- 1000 euros</option>
         </select>
 
-        <select className="bg-white tracking-widest w-48 h-10 text-black font-bold border-2 border-black rounded-md focus:border-purple hover:scale-105 transition-all duration-300" >
+        <select className="bg-white tracking-widest w-36 sm:w-48 h-10 text-sm sm:text-base text-black font-bold border-2 border-black rounded-md focus:border-purple hover:scale-105 transition-all duration-300" >
           <option value="option1">Bien noté</option>
           <option value="option2">Meilleurs Ventes</option>
         </select>

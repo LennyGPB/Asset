@@ -36,7 +36,7 @@ export default function S2_home() {
       <h1 className="text-white text-center text-4xl uppercase mt-20 mb-10 tracking-[10px] title">
         Assets Populaire
       </h1>
-      <div className="flex justify-center flex-wrap gap-2 sm:gap-10">
+      <div className="flex justify-center flex-wrap sm:gap-10">
         {popularAssets && popularAssets.map((asset) => (
           <Card key={asset.id_asset} lienImage={asset.image_couverture ?? ""} titre={asset.titre} prix={asset.prix} description={asset.description} id={asset.id_asset} likes={asset.likes} />
         ))}
