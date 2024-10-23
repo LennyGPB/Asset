@@ -9,7 +9,7 @@ export default function S1_home() {
   return (
     <>
       <section className="md:wrapper mb-4 sm:mt-2">
-        <h1 className="text-4xl md:text-5xl text-white tracking-[10px] text-center mt-14 sm:mt-24 title">
+        <h1 className="text-4xl md:text-5xl text-white tracking-[10px] text-center mt-10 sm:mt-24 title">
           ASSETS STORE
         </h1>
 
@@ -21,7 +21,7 @@ export default function S1_home() {
 
         <Circles />
 
-        <div className="flex justify-center mt-12 px-8 sm:px-0 sm:mt-10 mb-16">
+        <div className="flex justify-center mt-10 px-8 sm:px-0 sm:mt-10 mb-16">
           <ShimmerButton
             background="#FFFF"
             borderRadius="15px"

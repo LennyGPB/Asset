@@ -67,7 +67,7 @@ export default function Navbar() {
 
 
           <form method="GET" onSubmit={handleSearch} className="sm:absolute sm:left-1/2 sm:transform sm:-translate-x-1/2 ">
-            <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Recherchez un asset..." className="p-1 w-[280px] sm:w-[500px] mt-1 sm:mt-0 text-white bg-black border border-neutral-500 rounded-md placeholder:text-neutral-500 focus:border-purple" name="query"/>
+            <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Recherchez un asset..." className="p-1 w-[265px] sm:w-[500px] mt-1 sm:mt-0 text-white bg-black border border-neutral-500 rounded-md placeholder:text-neutral-500 focus:border-purple" name="query"/>
           </form>
 
           <button onClick={() => setIsDropdownOpen(!isDropdownOpen)} type="button" aria-hidden="true"  className="sm:hidden">
