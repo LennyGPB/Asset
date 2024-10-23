@@ -8,7 +8,7 @@ import type { AdapterUser } from "next-auth/adapters";
 // Étendre l'interface `Session` pour ajouter `id` dans `user`
 declare module "next-auth" {
   interface User {
-    role?: string; // Ajout du champ role à l'interface User
+    role?: string; 
   }
 
   interface Session {
