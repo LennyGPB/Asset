@@ -44,14 +44,6 @@ CREATE TABLE `Asset` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `AssetTags` (
-    `assetId` INTEGER NOT NULL,
-    `tagId` INTEGER NOT NULL,
-
-    PRIMARY KEY (`assetId`, `tagId`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
 CREATE TABLE `User` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(191) NULL,
@@ -63,6 +55,25 @@ CREATE TABLE `User` (
 
     UNIQUE INDEX `User_email_key`(`email`),
     PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `Likes` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `userId` INTEGER NOT NULL,
+    `assetId` INTEGER NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+
+    UNIQUE INDEX `Likes_userId_assetId_key`(`userId`, `assetId`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `AssetTags` (
+    `assetId` INTEGER NOT NULL,
+    `tagId` INTEGER NOT NULL,
+
+    PRIMARY KEY (`assetId`, `tagId`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
@@ -134,7 +145,13 @@ ALTER TABLE `Asset` ADD CONSTRAINT `Asset_userId_fkey` FOREIGN KEY (`userId`) RE
 ALTER TABLE `Asset` ADD CONSTRAINT `Asset_categorieId_fkey` FOREIGN KEY (`categorieId`) REFERENCES `Categorie`(`id_categorie`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `AssetTags` ADD CONSTRAINT `AssetTags_assetId_fkey` FOREIGN KEY (`assetId`) REFERENCES `Asset`(`id_asset`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Likes` ADD CONSTRAINT `Likes_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Likes` ADD CONSTRAINT `Likes_assetId_fkey` FOREIGN KEY (`assetId`) REFERENCES `Asset`(`id_asset`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `AssetTags` ADD CONSTRAINT `AssetTags_assetId_fkey` FOREIGN KEY (`assetId`) REFERENCES `Asset`(`id_asset`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `AssetTags` ADD CONSTRAINT `AssetTags_tagId_fkey` FOREIGN KEY (`tagId`) REFERENCES `Tags`(`id_tags`) ON DELETE RESTRICT ON UPDATE CASCADE;
