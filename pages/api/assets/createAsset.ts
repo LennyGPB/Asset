@@ -36,11 +36,11 @@ export default function handler( req: NextApiRequestWithFiles, res: NextApiRespo
         const tagIdsArray = Array.isArray(tagIds)
           ? tagIds
               .map((id: string) => Number.parseInt(id, 10))
-              .filter((id) => !isNaN(id))
+              .filter((id: number) => !isNaN(id))
           : tagIds
               .split(",")
               .map((id: string) => Number.parseInt(id.trim(), 10))
-              .filter((id) => !isNaN(id));
+              .filter((id: number) => !isNaN(id));
 
         if ( !titre || !description || !prix || !slogan || !categorieId || !tagIds || !userId ) 
         {
