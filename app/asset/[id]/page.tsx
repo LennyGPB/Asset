@@ -90,6 +90,10 @@ export default function Asset() {
   }
 
   const handleBuyAsset = async () => {
+    if (!userId) {
+      alert("User ID is missing. Please log in.");
+      return;
+    }
     const response = await fetch('/api/stripe/buyAsset', {
       method: 'POST',
       headers: {
@@ -100,12 +104,13 @@ export default function Asset() {
   
     if (response.ok) {
       const data = await response.json();
-      // Redirige vers l'URL de session Stripe Checkout
-      window.location.href = data.url; 
+      window.location.href = data.url;
     } else {
       console.error('Erreur lors de l’achat de l’asset');
+      alert('Erreur lors de l’achat de l’asset. Veuillez réessayer.');
     }
   };
+  
 
   return (
     <>
