@@ -158,7 +158,7 @@ export default function Asset() {
                   type="button"
                   className="absolute bottom-40 sm:bottom-56 tracking-widest button p-2 rounded-lg text-white font-bold uppercase"
                 >
-                  Acheter l'Asset
+                  Acheter cet asset
                 </button>
               </div>
             </div>
