@@ -4,7 +4,13 @@ import stripe from '@/lib/stripe';  // Stripe SDK initialisé avec tes clés
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
-    const { assetId, userId } = req.body;
+    const { assetId, userId } = JSON.parse(req.body);
+
+    if (!assetId || !userId) {
+      console.error("Erreur : ID de l'asset ou de l'utilisateur manquant");
+      return res.status(400).json({ error: "Missing assetId or userId" });
+    }
+
 
     try {
       // Récupérer l'asset à acheter dans la base de données
@@ -40,6 +46,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         },
       });
 
+      console.log("Session Stripe créée avec succès :", session.url);
       res.status(200).json({ url: session.url });
     } catch (error) {
       console.error('Error creating Stripe session:', error);
