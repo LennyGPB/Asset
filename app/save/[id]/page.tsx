@@ -48,7 +48,7 @@ export default function Save({params}: {params: {id: string}}) {
     <>
       <Navbar />
 
-      <h2 className="text-white text-center text-4xl mt-10 tracking-widest uppercase">Mes Assets sauvegardés</h2>
+      <h2 className="text-white text-center text-4xl mt-10 tracking-widest uppercase mt-7 sm:mt-0">Mes Assets sauvegardés</h2>
 
       <div className="flex flex-wrap justify-center sm:gap-10">
         {assetsLiked.length === 0 ? (

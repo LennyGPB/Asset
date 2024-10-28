@@ -56,7 +56,7 @@ export default function AdminCard({ lienImage, titre, prix, description, id, lik
   
   return (
     <>
-      <article className="relative flex flex-col gap-3 w-[350px] h-[450px] mt-10 mb-10 rounded-xl bg-neutral-900 border border-neutral-500">
+      <article className="relative flex flex-col gap-3 w-[350px] h-[450px] mt-10 sm:mb-10 rounded-xl bg-neutral-900 border border-neutral-500">
         <div className="absolute -top-2 left-2 w-[350px] h-[450px] rounded-xl bg-neutral-900 border border-neutral-500 z-[-1]"></div>
 
         <button type="button" className="flex gap-1 absolute top-5 left-5" onClick={handleLikeToggle}>

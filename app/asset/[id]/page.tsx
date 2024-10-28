@@ -6,8 +6,9 @@ import Card from "../../../components/shared/Card";
 import { use, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Meteors from "@/components/magicui/meteors";
-
+import { useSession } from "next-auth/react";
 interface Asset {
+  id: string;
   titre: string;
   slogan: string;
   prix: number;
@@ -27,6 +28,8 @@ interface Media {
 
 
 export default function Asset() {
+  const session = useSession();
+  const userId = session.data?.user?.id;
   const [asset, setAsset] = useState<Asset | null>(null);
   const [medias, setMedias] = useState<string[]>([]);
   const params = useParams();
@@ -86,6 +89,24 @@ export default function Asset() {
     return <div>Asset non trouvée</div>; 
   }
 
+  const handleBuyAsset = async () => {
+    const response = await fetch('/api/stripe/buyAsset', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ assetId: asset.id, userId: userId }),
+    });
+  
+    if (response.ok) {
+      const data = await response.json();
+      // Redirige vers l'URL de session Stripe Checkout
+      window.location.href = data.url; 
+    } else {
+      console.error('Erreur lors de l’achat de l’asset');
+    }
+  };
+
   return (
     <>
       <Navbar />
@@ -133,6 +154,7 @@ export default function Asset() {
 
               <div className=" flex justify-center ">
                 <button
+                  onClick={handleBuyAsset}
                   type="button"
                   className="absolute bottom-40 sm:bottom-56 tracking-widest button p-2 rounded-lg text-white font-bold uppercase"
                 >

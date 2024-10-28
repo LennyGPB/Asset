@@ -34,7 +34,7 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="mt-4 mx-3 sm:mx-14 flex flex-col text-white ">
+      <nav className="mt-4 mx-3 sm:mx-14 flex flex-col text-white z-50">
         <div className="relative justify-center gap-3 sm:justify-between flex sm:items-center">
           <Link href="/" className="flex items-center gap-7">
             <Image src="/medias/logo_asset_temporaire.png" alt="Logo" width={50} height={50} className="hidden sm:block"/>
@@ -42,10 +42,29 @@ export default function Navbar() {
           </Link>
           
 
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-11 sm:hidden" onClick={() => setIsMobileMenuOpen(true)} aria-expanded={isMobileMenuOpen}>
-          <title>Menu icon</title>
-          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 5.25h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5" />
-        </svg>
+          {/* Menu mobile ------------------------------------------------------------------- */}
+          <div className="flex justify-center items-center gap-3 fixed sm:hidden">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-9" onClick={() => setIsMobileMenuOpen(true)} aria-expanded={isMobileMenuOpen}>
+                <title>Menu icon</title>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 5.25h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5" />
+              </svg>
+
+              <form method="GET" onSubmit={handleSearch} className="sm:hidden sm:absolute sm:left-1/2 sm:transform sm:-translate-x-1/2 ">
+                <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Recherchez un asset..." className="p-1 w-[265px] sm:w-[500px] text-white bg-black border border-neutral-500 rounded-md placeholder:text-neutral-500 focus:border-purple" name="query"/>
+              </form>
+              
+              {session ? (
+            <button onClick={() => setIsDropdownOpen(!isDropdownOpen)} type="button" aria-hidden="true" className="sm:hidden">
+                <Image src={session?.user.image || ""} alt="Profile picture" width={50} height={50} className="sm:hidden rounded-full w-14 h-10"/>
+                </button>
+              ) : (
+                <button type="button" onClick={() => signIn("discord")} aria-hidden="true" className="sm:hidden">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-9">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9" />
+                </svg>
+                </button>
+              )}
+          </div>
 
         <div className={`fixed top-0 left-0 h-screen w-1/2 z-50 bg-blackA text-white transform ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out`}>         
           <div className="flex flex-col p-5">
@@ -66,16 +85,10 @@ export default function Navbar() {
         </div>
 
 
-          <form method="GET" onSubmit={handleSearch} className="sm:absolute sm:left-1/2 sm:transform sm:-translate-x-1/2 ">
+          <form method="GET" onSubmit={handleSearch} className="hidden sm:block sm:absolute sm:left-1/2 sm:transform sm:-translate-x-1/2 ">
             <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Recherchez un asset..." className="p-1 w-[265px] sm:w-[500px] mt-1 sm:mt-0 text-white bg-black border border-neutral-500 rounded-md placeholder:text-neutral-500 focus:border-purple" name="query"/>
           </form>
 
-          <button onClick={() => setIsDropdownOpen(!isDropdownOpen)} type="button" aria-hidden="true"  className="sm:hidden">
-            <Image src={session?.user.image || ""} alt="Profile picture" width={50} height={50} className="sm:hidden rounded-full w-14 h-10"/>
-          </button>
-          
-
-              
           <div className="hidden sm:flex items-center gap-3">
           <a href="/profile" className="hidden sm:block uppercase button rounded-md px-3 p-1 tracking-wider text-md mr-5 hover:scale-105 transition-transform duration-300 ease-in-out">
             Devenir vendeur
@@ -91,7 +104,7 @@ export default function Navbar() {
                 </Link>
               </div>
             ) : (
-              <button type="button" onClick={() => signIn("discord")} className="text-center p-1 w-36 button rounded-md tracking-wider uppercase">
+              <button type="button" onClick={() => signIn("discord")} className="text-center p-1 w-40 button rounded-md tracking-wider uppercase hover:scale-105 transition-transform duration-300 ease-in-out">
                 Se connecter
               </button>
             )}

@@ -66,10 +66,9 @@ export default function AssetsList({ assets, tags, categorie }: AssetsListProps)
     <>
       <Navbar />
 
+      <ScrollTextEffectOne text={categorie + " -"} size="3xl mt-7 sm:mt-0" />
 
-      <ScrollTextEffectOne text={categorie + " -"} size="3xl" />
-
-      <div className="flex flex-wrap justify-center items-center gap-3 sm:gap-7 mt-5">
+      <div className="flex flex-wrap justify-center items-center gap-3 sm:gap-7 mt-7 sm:mt-5">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
