@@ -52,6 +52,7 @@ model Asset {
   medias           Medias[]   @relation("possede")  // Relation avec Medias
   tags             AssetTags[]
   owners           Possession[]
+  buyers           Buy[]
   assetLikes       Likes[]
 }
 
@@ -63,10 +64,12 @@ model User {
   password      String?
   image         String?
   role          String    @default("user")
+  stripeId      String?
   accounts      Account[] 
   sessions      Session[] 
   assets        Asset[]   // Relation pour poster un Asset
   ownedAssets   Possession[] // Relation pour les assets possédés
+  buyedAssets   Buy[] // Relation pour les assets achetés
   likes         Likes[] 
 }
 
@@ -89,6 +92,18 @@ model AssetTags {
   tag      Tags  @relation(fields: [tagId], references: [id_tags], name: "TagAssets") // Ajout du nom de la relation
 
   @@id([assetId, tagId]) // Clé primaire composée
+}
+
+model Buy {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  assetId    Int
+  createdAt  DateTime @default(now())
+
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  asset      Asset    @relation(fields: [assetId], references: [id_asset], onDelete: Cascade)
+
+  @@unique([userId, assetId]) // Empêche les doublons : un utilisateur ne peut acheter un asset qu'une fois
 }
 
 model Possession {

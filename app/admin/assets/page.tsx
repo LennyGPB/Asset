@@ -73,7 +73,7 @@ export default function Admin() {
         <Link href="/formAsset" className="bg-white text-center p-2 border-2 w-56 rounded-lg tracking-widest border-neutral-500 hover:scale-105 transition-all duration-300">Ajouter un asset</Link>
       </div>
 
-      <div className="flex justify-center flex-wrap gap-7 mt-3">
+      <div className="flex justify-center flex-wrap gap-10 mt-3">
         {filteredAssets.length > 0 ? (
           filteredAssets.map((asset) => (
             <AdminCard
