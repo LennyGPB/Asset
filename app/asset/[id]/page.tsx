@@ -99,7 +99,7 @@ export default function Asset() {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ assetId: asset.id, userId: userId }),
+      body: JSON.stringify({ assetId: id, userId: userId }),
     });
   
     if (response.ok) {
@@ -107,7 +107,6 @@ export default function Asset() {
       window.location.href = data.url;
     } else {
       console.error('Erreur lors de l’achat de l’asset');
-      alert('Erreur lors de l’achat de l’asset. Veuillez réessayer.');
     }
   };
   
