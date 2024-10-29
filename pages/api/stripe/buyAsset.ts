@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from "@/lib/prisma"; 
-import stripe from '@/lib/stripe';  // Stripe SDK initialisé avec tes clés
+import stripe from '@/lib/stripe';  
 
 export const config = {
   api: {
