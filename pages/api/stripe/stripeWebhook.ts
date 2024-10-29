@@ -16,20 +16,18 @@ export const config = {
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
-    const buf = await buffer(req); // Lit la requête en buffer
-    const sig = req.headers['stripe-signature']; // Récupère la signature Stripe
+    const buf = await buffer(req);
+    const sig = req.headers['stripe-signature'];
 
     let event: Stripe.Event;
 
     try {
-      // Vérifie que l'événement est bien envoyé par Stripe
       event = stripe.webhooks.constructEvent(buf, sig as string, process.env.STRIPE_WEBHOOK_SECRET as string);
     } catch (err: any) {
       console.error('⚠️ Erreur de vérification de la signature du webhook.', err.message);
       return res.status(400).send(`Webhook Error: ${err.message}`);
     }
 
-    // Gérer l'événement
     if (event.type === 'checkout.session.completed') {
       const session = event.data.object as Stripe.Checkout.Session;
 
@@ -37,20 +35,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const assetId = session.metadata?.assetId;
       const userId = session.metadata?.userId;
 
+      console.log('assetId:', assetId);
+      console.log('userId:', userId);
+
       // Ajouter l'asset à l'utilisateur dans la base de données
       try {
-        await prisma.buy.create({
+        const buyRecord = await prisma.buy.create({
           data: {
             userId: Number(userId),
             assetId: Number(assetId),
           },
         });
+        console.log('Record created in buy table:', buyRecord);
 
         // Mettre à jour le nombre de téléchargements de l'asset
-        await prisma.asset.update({
+        const updatedAsset = await prisma.asset.update({
           where: { id_asset: Number(assetId) },
           data: { nb_dl: { increment: 1 } },
         });
+        console.log('Updated asset downloads:', updatedAsset);
 
         res.status(200).json({ received: true });
       } catch (error) {
