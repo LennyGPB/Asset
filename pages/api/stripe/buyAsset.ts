@@ -22,7 +22,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
       // Récupérer l'asset à acheter dans la base de données
       const asset = await prisma.asset.findUnique({
-        where: { id_asset: assetId },
+        where: { id_asset: Number(assetId) },
       });
 
       if (!asset) {
