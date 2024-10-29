@@ -94,7 +94,7 @@ export default function Asset() {
       alert("User ID is missing. Please log in.");
       return;
     }
-    const response = await fetch('/api/stripe/buyAsset', {
+    const response = await fetch('https://asset-three.vercel.app/api/stripe/buyAsset', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
