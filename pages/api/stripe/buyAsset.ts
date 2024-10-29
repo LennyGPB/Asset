@@ -5,6 +5,7 @@ import stripe from '@/lib/stripe';  // Stripe SDK initialisé avec tes clés
 export const config = {
   api: {
     bodyParser: true,
+    externalResolver: true,
   },
 };
 
