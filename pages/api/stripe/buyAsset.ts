@@ -5,14 +5,13 @@ import stripe from '@/lib/stripe';
 export const config = {
   api: {
     bodyParser: true,
-    externalResolver: true,
   },
 };
 
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
-    const { assetId, userId } = JSON.parse(req.body);
+    const { assetId, userId } = req.body;
 
     if (!assetId || !userId) {
       console.error("Erreur : ID de l'asset ou de l'utilisateur manquant");
