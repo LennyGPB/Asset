@@ -62,6 +62,10 @@ const config = {
             opacity: "0",
           },
         },
+        wiggle: {
+          '0%, 100%': { transform: 'rotate(-3deg)' },
+          '50%': { transform: 'rotate(3deg)' },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -70,6 +74,8 @@ const config = {
         "spin-around": "spin-around calc(var(--speed) * 2) infinite linear",
         slide: "slide var(--speed) ease-in-out infinite alternate",
         meteor: "meteor 5s linear infinite",
+        'spin-slow': 'spin 10s linear infinite',
+        wiggle: 'wiggle 5s ease-in-out infinite',
       },
     },
   },

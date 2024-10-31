@@ -41,7 +41,7 @@ export default function Profile() {
    <>
    <ProfilHeader id={id} />
 
-   <div className="flex flex-wrap gap-2 sm:gap-10 justify-center">
+   <div className="flex flex-wrap gap-2 sm:gap-10 mt-10 sm:mb-10 justify-center">
     {assets.map((asset: Asset) => (
       <ProfilCard key={asset.id_asset} lienImage={asset.image_couverture || ""} titre={asset.titre} prix={asset.prix} description={asset.description} id={asset.id_asset} likes={asset.likes} />
     ))}

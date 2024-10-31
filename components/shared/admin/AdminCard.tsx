@@ -3,6 +3,7 @@
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useMotionValue, motion, useMotionTemplate } from "framer-motion";
 
 export default function AdminCard({ lienImage, titre, prix, description, id, likes}: {lienImage: string; titre: string; prix: number; description: string; id: number; likes: number;}) {
   const router = useRouter();
@@ -53,52 +54,77 @@ export default function AdminCard({ lienImage, titre, prix, description, id, lik
       console.error('Error deleting asset:', error);
     }
   };
+
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
   
   return (
     <>
-      <article className="relative flex flex-col gap-3 w-[350px] h-[450px] mt-10 sm:mb-10 rounded-xl bg-neutral-900 border border-neutral-500">
-        <div className="absolute -top-2 left-2 w-[350px] h-[450px] rounded-xl bg-neutral-900 border border-neutral-500 z-[-1]"></div>
-
-        <button type="button" className="flex gap-1 absolute top-5 left-5" onClick={handleLikeToggle}>
-        <p className="flex items-center gap-1 text-sm tracking-widest bg-white px-2 rounded-lg font-bold border border-neutral-500">
-          {likes}
-          <svg width="800px" height="800px" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="size-3">
-            <path d="M1.24264 8.24264L8 15L14.7574 8.24264C15.553 7.44699 16 6.36786 16 5.24264V5.05234C16 2.8143 14.1857 1 11.9477 1C10.7166 1 9.55233 1.55959 8.78331 2.52086L8 3.5L7.21669 2.52086C6.44767 1.55959 5.28338 1 4.05234 1C1.8143 1 0 2.8143 0 5.05234V5.24264C0 6.36786 0.44699 7.44699 1.24264 8.24264Z" fill="#000000"/>
-          </svg>
-        </p>
-      </button>
-
-        {/*<button type="button" className="absolute top-5 right-5 bg-white p-1 rounded-md border border-neutral-500">
-        <svg width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="size-4">
-          <path d="M16.8203 2H7.18031C5.05031 2 3.32031 3.74 3.32031 5.86V19.95C3.32031 21.75 4.61031 22.51 6.19031 21.64L11.0703 18.93C11.5903 18.64 12.4303 18.64 12.9403 18.93L17.8203 21.64C19.4003 22.52 20.6903 21.76 20.6903 19.95V5.86C20.6803 3.74 18.9503 2 16.8203 2ZM15.0103 9.75C14.0403 10.1 13.0203 10.28 12.0003 10.28C10.9803 10.28 9.96031 10.1 8.99031 9.75C8.60031 9.61 8.40031 9.18 8.54031 8.79C8.69031 8.4 9.12031 8.2 9.51031 8.34C11.1203 8.92 12.8903 8.92 14.5003 8.34C14.8903 8.2 15.3203 8.4 15.4603 8.79C15.6003 9.18 15.4003 9.61 15.0103 9.75Z" fill="#292D32"/>
-        </svg>
-      </button> */}
-
-      <a href={`/asset/${id}`}>
-        <div className="px-3">
-          <Image src={lienImage} alt="Hxh" width={300} height={300} className="rounded-lg object-cover w-full h-52 mt-3" />
+     <div
+    onMouseMove={(e) => {
+      const { left, top } = e.currentTarget.getBoundingClientRect();
+      mouseX.set(e.clientX - left);
+      mouseY.set(e.clientY - top);
+    }}
+    className="group relative max-w-[320px] w-full overflow-hidden rounded-xl bg-neutral-900"
+  >
+    <div className="absolute right-5 top-0 h-px w-80 bg-gradient-to-l from-transparent via-white/30 via-10% to-transparent" />
+    
+    <motion.div
+      className="pointer-events-none absolute -inset-px rounded-xl opacity-0 transition duration-300 group-hover:opacity-100"
+      style={{
+        background: useMotionTemplate`
+          radial-gradient(200px circle at ${mouseX}px ${mouseY}px, rgba(51, 51, 51, 0.4), transparent 80%)
+        `,
+      }}
+    />
+  
+    <div className="relative flex flex-col h-[410px]  rounded-xl border border-white/30 px-4 py-5 justify-between">
+      {/* Contenu principal */}
+      <div className="flex-grow space-y-2">
+        <Image
+          src={lienImage}
+          alt="Product image"
+          height={350}
+          width={208}
+          className="rounded-xl h-52 w-full object-cover opacity-75 hover:opacity-100 transition duration-500"
+        />
+        <div className="flex flex-row items-center justify-between pt-2">
+          <h3 className="text-xl font-semibold text-neutral-200">
+            {titre.length > 16 ? `${titre.slice(0, 19)}..` : titre}
+          </h3>
+          <p className="text-[13px] text-neutral-300 select-none">{prix}$</p>
         </div>
-
-        <div className="flex justify-between text-white px-3 mt-3">
-          <p className="text-md flex items-center bg-white text-black px-2 rounded-lg tracking-widest font-bold">{titre.length > 16 ? `${titre.slice(0, 19)}..` : titre}</p>
-             <p className="text-xl  tracking-widest font-bold">{prix} $</p>
-        </div>
-
-        <p className="text-sm text-center mt-5 px-3 tracking-widest text-white">
+        <p className="text-sm leading-[1.5] text-neutral-400 pb-3">
           {description.length > 180 ? `${description.slice(0, 180)}...` : description}
         </p>
-
-        </a>
-        <div className="flex justify-center">
-          <button
-            type="button"
-            className="absolute bottom-[10px] w-80 tracking-widest font-bold p-2 bg-red-500 rounded-lg hover:scale-105 transition-all duration-300"
-            onClick={handleDeleteAsset}
+      </div>
+  
+      {/* Boutons en bas */}
+      <div className="flex justify-center gap-2 mt-4">
+        <button type="button" onClick={handleDeleteAsset} className="inline-flex items-center justify-center gap-1 text-sm py-2 px-4 font-semibold bg-red-500 text-black rounded-lg duration-300 hover:bg-red-700/70 w-full">
+          Supprimer l'Asset
+        </button>
+        <button className="inline-flex items-center justify-center gap-1 text-sm px-1 font-semibold bg-white text-black rounded-lg duration-300 hover:bg-white/70 w-16">
+          {likes}
+          <svg
+            width="800px"
+            height="800px"
+            viewBox="0 0 16 16"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="size-3"
           >
-            Supprimer l'asset
-          </button>
-        </div>
-      </article>
+            <path
+              d="M1.24264 8.24264L8 15L14.7574 8.24264C15.553 7.44699 16 6.36786 16 5.24264V5.05234C16 2.8143 14.1857 1 11.9477 1C10.7166 1 9.55233 1.55959 8.78331 2.52086L8 3.5L7.21669 2.52086C6.44767 1.55959 5.28338 1 4.05234 1C1.8143 1 0 2.8143 0 5.05234V5.24264C0 6.36786 0.44699 7.44699 1.24264 8.24264Z"
+              fill="#000000"
+            />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
     </>
   );
 }
+

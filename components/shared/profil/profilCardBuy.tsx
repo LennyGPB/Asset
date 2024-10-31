@@ -53,7 +53,7 @@ export default function Cardv2({ lienImage, titre, prix, description, id, likes}
       {/* Boutons en bas */}
       <div className="flex justify-center gap-2 mt-4">
         <Link  href={`/updateAsset/${id}`} className="inline-flex items-center justify-center gap-1 text-sm py-2 px-4 font-semibold bg-white text-black rounded-lg duration-300 hover:bg-white/70 w-full">
-          Modifier l'Asset
+          Télécharger l'Asset
         </Link>
         <button className="inline-flex items-center justify-center gap-1 text-sm px-1 font-semibold bg-white text-black rounded-lg duration-300 hover:bg-white/70 w-16">
           {likes}
