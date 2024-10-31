@@ -6,6 +6,8 @@ import { prisma } from "@/lib/prisma";
 import { useState, useEffect } from "react";
 import { getSession, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import Meteors from "@/components/magicui/meteors";
+import Cardv2 from "@/components/shared/Cardv2";
 
 interface Asset {
   id_asset: number;
@@ -48,14 +50,14 @@ export default function Save({params}: {params: {id: string}}) {
     <>
       <Navbar />
 
-      <h2 className="text-white text-center text-4xl mt-10 tracking-widest uppercase mt-7 sm:mt-0">Mes Assets sauvegardés</h2>
+      <h2 className="text-white text-center text-4xl mt-10 tracking-widest uppercase sm:mt-10">Mes Assets sauvegardés</h2>
 
       <div className="flex flex-wrap justify-center sm:gap-10">
         {assetsLiked.length === 0 ? (
           <div>Aucun asset trouvé</div>
         ) : (
           assetsLiked.map((asset) => (
-            <Card
+            <Cardv2
               key={asset.id_asset}
               lienImage={asset.image_couverture ?? ""}
               titre={asset.titre}
@@ -66,6 +68,7 @@ export default function Save({params}: {params: {id: string}}) {
             />
           ))
         )}
+          <Meteors number={30} />
       </div>
     </>
   );

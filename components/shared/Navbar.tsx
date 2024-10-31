@@ -42,7 +42,7 @@ export default function Navbar() {
           </Link>
           
 
-          {/* Menu mobile ------------------------------------------------------------------- */}
+        {/* Menu mobile ------------------------------------------------------------------- */}
           <div className="flex justify-center items-center gap-3 fixed sm:hidden">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-9" onClick={() => setIsMobileMenuOpen(true)} aria-expanded={isMobileMenuOpen}>
                 <title>Menu icon</title>
@@ -116,7 +116,7 @@ export default function Navbar() {
         <div className="absolute top-14 right-0 mr-2 sm:mr-28 mt-2 w-40 sm:w-48 bg-white text-black rounded-lg shadow-lg z-50">
           <ul className="flex flex-col">
             <li className="p-2 hover:bg-gray-100">
-              <a href={`/profil/${session?.user.id}`}>Mes Assets</a>
+              <a href={`/profil/${session?.user.id}/post`}>Mes Assets</a>
             </li>
             {session?.user.role === 'admin' && (
               <li className="p-2 hover:bg-gray-100">

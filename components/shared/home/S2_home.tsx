@@ -2,6 +2,7 @@
 
 import Card from "../Card";
 import { useState, useEffect } from "react";
+import Cardv2 from "../Cardv2";
 
 interface Asset {
   id_asset: number;
@@ -36,9 +37,9 @@ export default function S2_home() {
       <h1 className="text-white text-center text-4xl uppercase mt-10 sm:mt-20 mb-5 sm:mb-10 tracking-[10px] title">
         Assets Populaire
       </h1>
-      <div className="flex justify-center flex-wrap sm:gap-10">
+      <div className="flex justify-center flex-wrap sm:gap-10 mb-5">
         {popularAssets && popularAssets.map((asset) => (
-          <Card key={asset.id_asset} lienImage={asset.image_couverture ?? ""} titre={asset.titre} prix={asset.prix} description={asset.description} id={asset.id_asset} likes={asset.likes} />
+          <Cardv2 key={asset.id_asset} lienImage={asset.image_couverture ?? ""} titre={asset.titre} prix={asset.prix} description={asset.description} id={asset.id_asset} likes={asset.likes} />
         ))}
       </div>
     </>

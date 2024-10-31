@@ -3,11 +3,35 @@
 import Image from "next/image";
 import { useMotionValue, motion, useMotionTemplate } from "framer-motion";
 import Link from "next/link";
-
+import { useState } from "react";
+import { useLikes } from "@/contexts/LikeContext";
 
 export default function Cardv2({ lienImage, titre, prix, description, id, likes}: {lienImage: string; titre: string; prix: number; description: string; id: number; likes: number;}) {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
+
+  const { likes: globalLikes, toggleLike } = useLikes();
+  const isLiked = globalLikes[id] || false;
+
+  const handleLikeClick = async () => {
+    toggleLike(id); // Bascule le like/unlike dans le contexte global
+    
+    try {
+      const response = await fetch('/api/like', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ assetId: id }),
+      });
+  
+      const data = await response.json();
+  
+      if (!response.ok) {
+        console.error(data.message); // Affiche le message d’erreur de l’API
+      }
+    } catch (error) {
+      console.error('Error toggling like:', error);
+    }
+  };
 
   return (
     <div
@@ -52,11 +76,11 @@ export default function Cardv2({ lienImage, titre, prix, description, id, likes}
   
       {/* Boutons en bas */}
       <div className="flex justify-center gap-2 mt-4">
-        <Link  href={`/updateAsset/${id}`} className="inline-flex items-center justify-center gap-1 text-sm py-2 px-4 font-semibold bg-white text-black rounded-lg duration-300 hover:bg-white/70 w-full">
-          Modifier l'Asset
+        <Link href={`/asset/${id}`} className="inline-flex items-center justify-center gap-1 text-sm py-2 px-4 font-semibold bg-white text-black rounded-lg duration-300 hover:bg-white/70 w-full">
+          Voir l'Asset
         </Link>
-        <button className="inline-flex items-center justify-center gap-1 text-sm px-1 font-semibold bg-white text-black rounded-lg duration-300 hover:bg-white/70 w-16">
-          {likes}
+        <button type="button" onClick={handleLikeClick} className="inline-flex items-center justify-center gap-1 text-sm px-1 font-semibold bg-white text-black rounded-lg duration-300 hover:bg-white/70 w-16">
+          {isLiked ? likes + 1 : likes}
           <svg
             width="800px"
             height="800px"
@@ -74,6 +98,5 @@ export default function Cardv2({ lienImage, titre, prix, description, id, likes}
       </div>
     </div>
   </div>
-  
   );
 }
