@@ -16,7 +16,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           tag: true,
         },
       },
-      medias: true,
+      medias: {          
+        select: {
+          media: true,   
+        },
+      },
       user: true,
     },
   });

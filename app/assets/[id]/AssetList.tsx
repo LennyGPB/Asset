@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "../../../components/shared/Navbar";
 import Card from "../../../components/shared/Card";
 import Meteors from "@/components/magicui/meteors";
@@ -34,35 +34,38 @@ export default function AssetsList({ assets, tags, categorie }: AssetsListProps)
   const [selectedPrice, setSelectedPrice] = useState<number | null>(null);
   const [filteredAssets, setFilteredAssets] = useState<Asset[]>(assets);
 
+  useEffect(() => {
+    applyFilters();
+  }, [selectedPrice, selectedTag]);
+
+  const applyFilters = () => {
+    let filtered = assets;
+  
+    // Prix
+    if (selectedPrice !== null) {
+      filtered = filtered.filter(asset => asset.prix <= selectedPrice);
+    }
+  
+    // Tags
+    if (selectedTag !== null) {
+      filtered = filtered.filter(asset =>
+        asset.tags.some(tag => tag.id_tags === selectedTag)
+      );
+    }
+  
+    setFilteredAssets(filtered);
+  };
+
   const handlePriceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const price = Number(e.target.value);
-    console.log('Selected Price:', price);
     setSelectedPrice(price);
-  
-    if (price) {
-      const filtered = assets.filter(asset => asset.prix <= price);
-      setFilteredAssets(filtered);
-    } else {
-      setFilteredAssets(assets); // Remet tous les assets si aucun prix n'est sélectionné
-    }
   };
-
+  
   const handleTagChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const tagId = Number(e.target.value);
-    console.log('Selected Tag ID:', tagId);
     setSelectedTag(tagId);
-  
-    if (tagId) {
-      const filtered = assets.filter(asset => 
-        asset.tags.some(tag => tag.id_tags === tagId)
-      );
-      setFilteredAssets(filtered);
-    } else {
-      setFilteredAssets(assets); // Remet tous les assets si aucun tag n'est sélectionné
-    }
   };
   
-
   return (
     <>
       <Navbar />

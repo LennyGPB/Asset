@@ -7,6 +7,7 @@ import { use, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Meteors from "@/components/magicui/meteors";
 import { useSession } from "next-auth/react";
+
 interface Asset {
   id: string;
   titre: string;
@@ -52,7 +53,7 @@ export default function Asset() {
         const data = await response.json();
         setAsset(data.asset);
 
-        const mediaUrls = data.asset.medias.map((media: Media) => media.url);
+        const mediaUrls = data.asset.medias.map((media: { media: { url: string } }) => media.media.url);
         setMedias(mediaUrls);
 
       } catch (error) {
@@ -71,19 +72,35 @@ export default function Asset() {
   
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Fonction pour aller à l'image suivante
+  // Tri des médias avec gestion des vidéos YouTube en premier
+  const sortedMedias = [
+    ...medias.filter((media) => typeof media === "string" && (media.includes("youtu.be") || media.includes("www.youtube.com"))),
+    ...medias.filter((media) => typeof media === "string" && !media.includes("youtu.be")),
+  ];
+
+  // Fonction pour aller à l'image ou vidéo suivante
   const nextSlide = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === medias.length - 1 ? 0 : prevIndex + 1
+    setCurrentIndex((currentIndex) =>
+      currentIndex === sortedMedias.length - 1 ? 0 : currentIndex + 1
     );
   };
 
-  // Fonction pour aller à l'image précédente
+  // Fonction pour aller à l'image ou vidéo précédente
   const prevSlide = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? medias.length - 1 : prevIndex - 1
+    setCurrentIndex((currentIndex) =>
+      currentIndex === 0 ? sortedMedias.length - 1 : currentIndex - 1
     );
   };
+
+  // Vérifie si le média actuel est une vidéo YouTube
+  const isYouTubeVideo =
+  sortedMedias[currentIndex] &&
+  (sortedMedias[currentIndex].includes("youtu.be") || sortedMedias[currentIndex].includes("www.youtube.com"));
+
+  const iframeUrl = sortedMedias[currentIndex]
+  .replace("youtu.be/", "youtube.com/embed/")
+  .replace("watch?v=", "embed/");
+
 
   if (!asset) {
     return <div>Asset non trouvée</div>; 
@@ -115,35 +132,54 @@ export default function Asset() {
     <>
       <Navbar />
 
-    
       <div className="relative flex flex-wrap justify-center mt-10 gap-5">
         <div className="relative w-[345px] sm:w-[700px] h-96 rounded-lg border border-white overflow-hidden">
-          {/* Bouton précédent */}
-          <button
-            type="button"
-            className="absolute top-1/2 left-0 z-10 transform -translate-y-1/2 bg-white/30 text-white p-2 m-2 rounded-full"
-            onClick={prevSlide}
-          >
-            &#10094;
-          </button>
+          {/* Vérifie s'il y a des médias à afficher */}
+          {sortedMedias.length > 0 ? (
+            <>
+              {/* Bouton précédent */}
+              <button
+                type="button"
+                className="absolute top-1/2 left-0 z-10 transform -translate-y-1/2 bg-white/30 text-white p-2 m-2 rounded-full"
+                onClick={prevSlide}
+              >
+                &#10094;
+              </button>
 
-          {/* Image actuelle */}
-          <Image
-            src={medias[currentIndex]}
-            alt={`Image ${currentIndex + 1}`}
-            width={700}
-            height={300}
-            className="rounded-lg object-cover w-full h-full"
-          />
+              {/* Affiche le média actuel : vidéo ou image */}
+              {isYouTubeVideo ? (
+                <iframe
+                  src={iframeUrl}
+                  title={`Video ${currentIndex + 1}`}
+                  className="w-full h-full rounded-lg"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                ></iframe>
+              ) : (
+                <Image
+                  src={sortedMedias[currentIndex]}
+                  alt={`Image ${currentIndex + 1}`}
+                  width={700}
+                  height={300}
+                  className="rounded-lg object-cover w-full h-full"
+                />
+              )}
 
-          {/* Bouton suivant */}
-          <button
-            type="button"
-            className="absolute top-1/2 right-0 z-10 transform -translate-y-1/2 bg-white/30 text-white p-2 m-2 rounded-full"
-            onClick={nextSlide}
-          >
-            &#10095;
-          </button>
+              {/* Bouton suivant */}
+              <button
+                type="button"
+                className="absolute top-1/2 right-0 z-10 transform -translate-y-1/2 bg-white/30 text-white p-2 m-2 rounded-full"
+                onClick={nextSlide}
+              >
+                &#10095;
+              </button>
+            </>
+          ) : (
+            <div className="flex items-center justify-center w-full h-full text-white bg-gray-700">
+              <p>Aucun média disponible</p>
+            </div>
+          )}
         </div>
 
         <div className="flex flex-col gap-3">
@@ -160,7 +196,7 @@ export default function Asset() {
                 <button
                   onClick={handleBuyAsset}
                   type="button"
-                  className="absolute bottom-40 sm:bottom-56 tracking-widest button p-2 rounded-lg text-white font-bold uppercase"
+                  className="absolute bottom-40 sm:bottom-56 tracking-widest button p-2 rounded-lg text-white font-bold uppercase hover:scale-105 transition duration-300"
                 >
                   Acheter cet asset
                 </button>

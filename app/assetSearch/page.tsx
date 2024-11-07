@@ -35,12 +35,12 @@ function SearchResultsContent() {
   return (
     <>
       <Navbar />
-      <h2 className="text-white text-center text-4xl mt-10 tracking-widest uppercase">
+      <h2 className="title tracking-[8px] text-white text-center text-4xl mt-10 uppercase">
         Résultat de la recherche 
       </h2>
       <div className="flex flex-wrap justify-center sm:gap-7">
         {assets.length === 0 ? (
-          <div>Aucun asset trouvé pour la recherche "{query}"</div>
+          <div><p className='text-white/50 mt-3 title tracking-widest'>Aucun asset trouvé pour la recherche "{query}"</p></div>
         ) : (
           assets.map((asset) => (
             <Card
