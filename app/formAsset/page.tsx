@@ -4,6 +4,7 @@ import Navbar from "../../components/shared/Navbar";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import Meteors from "@/components/magicui/meteors";
+import ScrollTextEffectOne from "@/components/shared/ScrollTextEffectOne";
 
 interface Categorie {
   id_categorie: number;
@@ -30,6 +31,7 @@ export default function FormAsset() {
     categorieId: string;
     tagIds: string[];
     userId: number;
+    urlYoutube: string;
     coverImage: File | null;
     assetFile: File | null;
     additionalFiles: File[];
@@ -42,6 +44,7 @@ export default function FormAsset() {
     slogan: "",
     categorieId: "",
     tagIds: ["", "", ""],
+    urlYoutube: "",
     userId: session ? Number.parseInt(session.user.id) : 0,
     coverImage: null,
     assetFile: null,
@@ -206,12 +209,10 @@ export default function FormAsset() {
   return (
     <>
       <Navbar />
-      <h1 className="title tracking-[10px] text-white text-center text-4xl font-bold my-10 uppercase">
-        Créer son asset
-      </h1>
+      <ScrollTextEffectOne text={"Créer son Asset - "} size="3xl mt-7 sm:mt-0" />
 
       <form onSubmit={handleSubmit} method="POST" encType="multipart/form-data">
-        <div className="mx-auto flex justify-center text-white p-7 rounded-lg shadow-lg shadow-white/30 w-[900px] border-2 border-white">
+        <div className="mx-auto flex justify-center text-white  p-7 rounded-lg w-[900px] ">
           <div className="flex flex-col">
             <div className="flex gap-20 justify-between mt-5">
               <input
@@ -219,7 +220,7 @@ export default function FormAsset() {
                 name="titre"
                 value={formData.titre}
                 onChange={handleChange}
-                className="bg-black text-white h-10 w-80 rounded-lg border border-neutral-500 px-2 placeholder:text-white"
+                className="bg-black text-white h-10 w-80 rounded-md px-2 placeholder:text-white"
                 placeholder="Nom de l'Asset"
               />
 
@@ -227,7 +228,7 @@ export default function FormAsset() {
                 name="categorieId"
                 value={formData.categorieId}
                 onChange={handleChange}
-                className="bg-black text-white h-10 w-60 rounded-lg border border-neutral-500 px-2"
+                className="bg-black text-white h-10 w-60 rounded-md px-2"
               >
                 <option value="" disabled hidden>
                   Catégorie
@@ -247,7 +248,7 @@ export default function FormAsset() {
                 name="prix"
                 value={formData.prix}
                 onChange={handleChange}
-                className="bg-black text-white h-10 w-24 rounded-lg border border-neutral-500 px-2 placeholder:text-white"
+                className="bg-black text-white h-10 w-24 rounded-md  px-2 placeholder:text-white"
                 placeholder="Prix"
               />
             </div>
@@ -257,19 +258,28 @@ export default function FormAsset() {
               name="slogan"
               value={formData.slogan}
               onChange={handleChange}
-              className="bg-black text-white h-8 w-full mt-5 rounded-sm border border-neutral-500 px-2 placeholder:text-white"
+              className="bg-black text-white h-8 w-full mt-5 rounded-md  px-2 placeholder:text-white"
               placeholder="Slogan"
+            />
+
+            <input
+              type="text"
+              name="urlYoutube"
+              value={formData.urlYoutube}
+              onChange={handleChange}
+              className="bg-black text-white h-8 w-full mt-5 rounded-md  px-2 placeholder:text-white"
+              placeholder="URL Youtube (facultatif)"
             />
 
             <textarea
               name="description"
               value={formData.description}
               onChange={handleChange}
-              className="bg-black text-white h-40 w-full mt-2 mb-5 rounded-sm border border-neutral-500 px-2 placeholder:text-white"
+              className="bg-black text-white h-40 w-full mt-5 rounded-md px-2 placeholder:text-white"
               placeholder="Description détaillée du produit..."
             />
 
-            <p className="font-bold text-lg tracking-widest">
+            <p className="font-bold text-lg tracking-widest mt-5">
               Choisissez jusqu'à 3 tags
             </p>
 
@@ -277,7 +287,7 @@ export default function FormAsset() {
               <select
                 value={formData.tagIds[0]}
                 onChange={(e) => handleTagChange(e, 0)}
-                className="bg-black text-white h-10 w-40 rounded-lg border border-neutral-500 px-2"
+                className="bg-black text-white h-10 w-40 rounded-md  px-2"
               >
                 <option value="" disabled hidden>
                   Tag #1
@@ -292,7 +302,7 @@ export default function FormAsset() {
               <select
                 value={formData.tagIds[1]}
                 onChange={(e) => handleTagChange(e, 1)}
-                className="bg-black text-white h-10 w-40 rounded-lg border border-neutral-500 px-2"
+                className="bg-black text-white h-10 w-40 rounded-md  px-2"
               >
                 <option value="" disabled hidden>
                   Tag #2
@@ -307,7 +317,7 @@ export default function FormAsset() {
               <select
                 value={formData.tagIds[2]}
                 onChange={(e) => handleTagChange(e, 2)}
-                className="bg-black text-white h-10 w-40 rounded-lg border border-neutral-500 px-2"
+                className="bg-black text-white h-10 w-40 rounded-md  px-2"
               >
                 <option value="" disabled hidden>
                   Tag #3
@@ -322,51 +332,51 @@ export default function FormAsset() {
 
             <p className="font-bold text-lg tracking-widest mt-5">Importer votre image de couverture :</p>
             <div className="flex justify-center">
-              <input name="coverImage" type="file" onChange={handleCoverImageChange} className="bg-black text-white h-10 w-96 mt-5 rounded-sm border border-neutral-500 px-2" />
+              <input name="coverImage" type="file" onChange={handleCoverImageChange} className="bg-black text-white h-10 w-96 mt-3 rounded-md  px-2" />
             </div>
 
             <p className="font-bold text-lg tracking-widest mt-5">Importer vos images :</p>
-            <div className="flex justify-center gap-3 flex-wrap">
+            <div className="flex justify-center gap-2 flex-wrap">
               <input
                 name="additionalFiles"
                 onChange={(e) => handleAdditionalFilesChange(e)}
                 type="file"
-                className="bg-black text-white h-10 w-60 mt-5 rounded-sm border border-neutral-500 px-2 placeholder:text-white"
+                className="bg-black text-white h-10 w-60 mt-3 rounded-md px-2 placeholder:text-white"
               />
 
               <input
                 name="additionalFiles"
                 onChange={(e) => handleAdditionalFilesChange(e)}
                 type="file"
-                className="bg-black text-white h-10 w-60 mt-5 rounded-sm border border-neutral-500 px-2 placeholder:text-white"
+                className="bg-black text-white h-10 w-60 mt-3 rounded-md  px-2 placeholder:text-white"
               />
 
               <input
                 name="additionalFiles"
                 onChange={(e) => handleAdditionalFilesChange(e)}
                 type="file"
-                className="bg-black text-white h-10 w-60 mt-5 rounded-sm border border-neutral-500 px-2 placeholder:text-white"
+                className="bg-black text-white h-10 w-60 mt-3 rounded-md  px-2 placeholder:text-white"
               />
 
               <input
                 name="additionalFiles"
                 onChange={(e) => handleAdditionalFilesChange(e)}
                 type="file"
-                className="bg-black text-white h-10 w-60 mt-5 rounded-sm border border-neutral-500 px-2 placeholder:text-white"
+                className="bg-black text-white h-10 w-60 mt-3 rounded-md  px-2 placeholder:text-white"
               />
 
               <input
                 name="additionalFiles"
                 onChange={(e) => handleAdditionalFilesChange(e)}
                 type="file"
-                className="bg-black text-white h-10 w-60 mt-5 rounded-sm border border-neutral-500 px-2 placeholder:text-white"
+                className="bg-black text-white h-10 w-60 mt-3 rounded-md  px-2 placeholder:text-white"
               />
 
               <input
                 name="additionalFiles"
                 onChange={(e) => handleAdditionalFilesChange(e)}
                 type="file"
-                className="bg-black text-white h-10 w-60 mt-5 rounded-sm border border-neutral-500 px-2 placeholder:text-white"
+                className="bg-black text-white h-10 w-60 mt-3 rounded-md  px-2 placeholder:text-white"
               />
             </div>
 
@@ -377,7 +387,7 @@ export default function FormAsset() {
                 name="assetFile"
                 onChange={handleAssetFileChange}
                 type="file"
-                className="bg-black text-white h-10 w-96 mt-5 rounded-sm border border-neutral-500 px-2 placeholder:text-white"
+                className="bg-black text-white h-10 w-96 mt-3 rounded-md  px-2 placeholder:text-white"
               />
             </div>
             <button type="submit" className="button text-white font-bold tracking-widest mx-auto h-10 w-60 mt-5 rounded-lg uppercase px-2 hover:scale-105 transition-all duration-500">Confirmer</button>

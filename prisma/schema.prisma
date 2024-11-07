@@ -10,7 +10,7 @@ datasource db {
 model Medias {
   id_media Int      @id @default(autoincrement())
   url      String   @db.VarChar(255)
-  assets   Asset[]  @relation("possede")        // Relation avec Asset
+  assets   AssetMedia[]       // Relation avec Asset
 }
 
 model Categorie {
@@ -49,7 +49,7 @@ model Asset {
   categorieId      Int?
   categorie        Categorie? @relation("appartient", fields: [categorieId], references: [id_categorie])
 
-  medias           Medias[]   @relation("possede")  // Relation avec Medias
+  medias           AssetMedia[]
   tags             AssetTags[]
   owners           Possession[]
   buyers           Buy[]
@@ -83,6 +83,15 @@ model Likes {
   asset      Asset    @relation(fields: [assetId], references: [id_asset], onDelete: Cascade)
 
   @@unique([userId, assetId])  // Empêche les doublons : un utilisateur ne peut liker un asset qu'une fois
+}
+
+model AssetMedia {
+  assetId Int
+  mediaId Int
+  asset   Asset   @relation(fields: [assetId], references: [id_asset])
+  media   Medias  @relation(fields: [mediaId], references: [id_media])
+
+  @@id([assetId, mediaId])
 }
 
 model AssetTags {

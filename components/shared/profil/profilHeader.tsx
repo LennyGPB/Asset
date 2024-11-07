@@ -15,9 +15,7 @@ export default function ProfilHeader({ id }: { id: string }) {
           <div className="flex justify-center gap-5 mt-8">
             <Link 
               href={`/profil/${id}/post`}
-              className={`text-center text-lg p-2 w-64 rounded-lg font-bold tracking-widest border border-white/70 transition-all duration-300 ${
-                pathname === `/profil/${id}/post` ? 'bg-white text-black' : ' text-white hover:scale-105'
-              }`}
+              className={`text-center text-lg p-2 w-64 rounded-lg font-bold tracking-widest border border-white/70 transition-all duration-300 ${pathname === `/profil/${id}/post` ? 'bg-white text-black' : ' text-white hover:scale-105'}`}
             >
               Mes assets
             </Link>

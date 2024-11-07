@@ -43,7 +43,7 @@ export default function Buy() {
 
    <div className="flex flex-wrap gap-2 sm:gap-10 mt-10 sm:mb-10 justify-center">
     {buyedAssets.map((asset: Asset) => (
-      <ProfilCardBuy key={asset.id_asset} lienImage={asset.image_couverture || ""} titre={asset.titre} prix={asset.prix} description={asset.description} id={asset.id_asset} likes={asset.likes} />
+      <ProfilCardBuy key={asset.id_asset} lienImage={asset.image_couverture || ""} titre={asset.titre} prix={asset.prix} description={asset.description} id={asset.id_asset} userId={id} likes={asset.likes} />
     ))}
    </div>
    </>

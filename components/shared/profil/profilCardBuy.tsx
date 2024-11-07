@@ -2,12 +2,48 @@
 
 import Image from "next/image";
 import { useMotionValue, motion, useMotionTemplate } from "framer-motion";
-import Link from "next/link";
+import { useState } from "react";
 
 
-export default function Cardv2({ lienImage, titre, prix, description, id, likes}: {lienImage: string; titre: string; prix: number; description: string; id: number; likes: number;}) {
+export default function Cardv2({ lienImage, titre, prix, description, id, userId, likes}: {lienImage: string; titre: string; prix: number; description: string; id: number; userId: string; likes: number;}) {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
+
+  const [loading, setLoading] = useState(false);
+
+
+  async function handleDownload() {
+    setLoading(true);
+    try {
+      const downloadUrl = await getDownloadLink(id, Number(userId));
+      if (downloadUrl) {
+        window.location.href = downloadUrl; 
+      }
+    } catch (error) {
+      console.error("Erreur lors de la récupération du lien de téléchargement :", error);
+      alert("Erreur lors de la récupération du lien de téléchargement.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function getDownloadLink(assetId: number, userId: number) {
+    const response = await fetch('/api/assets/downloadAsset', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ assetId: assetId, userId: userId }),
+    });
+  
+    if (!response.ok) {
+      throw new Error("Erreur lors de la récupération du lien de téléchargement");
+    }
+  
+    const data = await response.json();
+    return data.downloadUrl;
+  }
+  
 
   return (
     <div
@@ -52,9 +88,9 @@ export default function Cardv2({ lienImage, titre, prix, description, id, likes}
   
       {/* Boutons en bas */}
       <div className="flex justify-center gap-2 mt-4">
-        <Link  href={`/updateAsset/${id}`} className="inline-flex items-center justify-center gap-1 text-sm py-2 px-4 font-semibold bg-white text-black rounded-lg duration-300 hover:bg-white/70 w-full">
-          Télécharger l'Asset
-        </Link>
+        <button type="button" onClick={handleDownload} className="inline-flex items-center justify-center gap-1 text-sm py-2 px-4 font-semibold bg-white text-black rounded-lg duration-300 hover:bg-white/70 w-full">
+          {loading ? "Téléchargement..." : "Télécharger l'Asset"}
+        </button>
         <button className="inline-flex items-center justify-center gap-1 text-sm px-1 font-semibold bg-white text-black rounded-lg duration-300 hover:bg-white/70 w-16">
           {likes}
           <svg
