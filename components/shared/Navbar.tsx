@@ -14,6 +14,7 @@ export default function Navbar() {
   const [categories, setCategories] = useState<Array<{ id_categorie: string; nom: string }>>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isModalCategoryOpen, setIsModalCategoryOpen] = useState(false);
   const pathname = usePathname();
   
 
@@ -43,15 +44,20 @@ export default function Navbar() {
           
 
          {/* Menu mobile ------------------------------------------------------------------- */}
-            <div className="flex justify-center items-center gap-3 fixed sm:hidden">
+            <div className="flex justify-center items-center gap-3 fixed sm:hidden z-50">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-9" onClick={() => setIsMobileMenuOpen(true)} aria-expanded={isMobileMenuOpen}>
                   <title>Menu icon</title>
                   <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 5.25h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5" />
                 </svg>
 
-                <form method="GET" onSubmit={handleSearch} className="sm:hidden sm:absolute sm:left-1/2 sm:transform sm:-translate-x-1/2 ">
+                {/* <form method="GET" onSubmit={handleSearch} className="sm:hidden sm:absolute sm:left-1/2 sm:transform sm:-translate-x-1/2 ">
                   <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Recherchez un asset..." className="p-1 w-[265px] sm:w-[500px] text-white bg-black border border-neutral-500 rounded-md placeholder:text-neutral-500 focus:border-purple" name="query"/>
+                </form> */}
+
+                <form method="GET" onSubmit={handleSearch} className="sm:hidden sm:absolute sm:left-1/2 sm:transform sm:-translate-x-1/2 ">
+                  <button type="button" onClick={() => setIsModalCategoryOpen(true)} className="p-1 w-[265px] sm:w-[500px] text-white bg-black border border-neutral-500 rounded-md uppercase tracking-widest font-semibold shadow-sm shadow-white/10 placeholder:text-neutral-500 focus:border-purple" name="query">Consulter les Assets</button>
                 </form>
+                
                 
                 {session ? (
               <button onClick={() => setIsDropdownOpen(!isDropdownOpen)} type="button" aria-hidden="true" className="sm:hidden">
@@ -66,23 +72,76 @@ export default function Navbar() {
                 )}
             </div>
 
-        <div className={`fixed top-0 left-0 h-screen w-1/2 z-50 bg-blackA text-white transform ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out`}>         
-          <div className="flex flex-col p-5">
-            {session ? (
-              <div className="flex items-center gap-3">
-                <Image  src={session.user.image || ""} alt="Profile picture" width={50} height={50} className="rounded-full w-10 h-10"/>              
-                <p className="ml-2">{session.user.name}</p>
-              </div>
-            ) : (
-              <a href="/login" className="text-center p-1 tracking-wider uppercase rounded-md button"> Se connecter </a>
-            )}
-            <h2 className="text-xl font-bold mb-4 mt-4">Catégories</h2>
-            {categories.map((category) => (
-              <a href={`/assets/${category.id_categorie}`} key={category.id_categorie} type="button" className="mb-2">{category.nom}  </a>
-            ))}                                              
-            <button type="button" onClick={() => setIsMobileMenuOpen(false)} className="mt-2 bg-white text-black rounded-md font-bold">Fermer</button>
-          </div>
-        </div>
+                {/* MODAL CATEGORIE ------------------------------------------------------------------- */}
+                {isModalCategoryOpen && (
+                <div
+                  className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md bg-black bg-opacity-50"
+                  onClick={() => setIsModalCategoryOpen(false)} // Ferme le modal si on clique en dehors
+                >
+                  <div
+                    className="flex flex-col justify-center items-center gap-5"
+                    onClick={(event) => event.stopPropagation()} // Empêche la propagation du clic
+                  >
+                    <p className="font-bold text-2xl tracking-widest rounded-md uppercase">
+                      Choisir une catégorie
+                    </p>
+                    {categories.map((category) => (
+                      <Link
+                        key={category.id_categorie}
+                        href={`/assets/${category.id_categorie}`}
+                        className="bg-white text-lg text-black tracking-widest shadow-md shadow-white/20 font-bold rounded-md text-center p-2 w-52 uppercase"
+                      >
+                        {category.nom}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
+              {/* MENU LATERAL MOBILE ------------------------------------------------------------------- */}
+              <div className={`fixed top-0 left-0 h-screen w-full z-50  text-white ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out`}
+                onClick={() => setIsMobileMenuOpen(false)} 
+              >
+                <div className="fixed top-0 left-0 h-screen w-1/2 bg-black p-5" onClick={(event) => event.stopPropagation()}>
+                  <div className="flex flex-col">
+                    {session ? (
+                      <div className="flex items-center gap-3">
+                        <Image
+                          src={session.user.image || ''}
+                          alt="Profile picture"
+                          width={50}
+                          height={50}
+                          className="rounded-full w-10 h-10"
+                        />
+                        <p className="ml-2">{session.user.name}</p>
+                      </div>
+                    ) : (
+                      <a href="/login" className="text-center p-1 tracking-wider uppercase rounded-md button">
+                        Se connecter
+                      </a>
+                    )}
+                    <h2 className="text-xl font-bold mb-4 mt-4">Catégories</h2>
+                    {categories.map((category) => (
+                      <a
+                        href={`/assets/${category.id_categorie}`}
+                        key={category.id_categorie}
+                        type="button"
+                        className="mb-2"
+                      >
+                        {category.nom}
+                      </a>
+                    ))}
+                    <button
+                      type="button"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="mt-2 bg-white text-black rounded-md font-bold"
+                    >
+                      Fermer
+                    </button>
+                  </div>
+                </div>
+            </div>
+
 
 
           <form method="GET" onSubmit={handleSearch} className="hidden sm:block sm:absolute sm:left-1/2 sm:transform sm:-translate-x-1/2 ">
