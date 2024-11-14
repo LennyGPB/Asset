@@ -9,15 +9,20 @@ export default function S1_home() {
   return (
     <>
       <section className="md:wrapper mb-4 sm:mt-2">
-        <h1 className="text-5xl md:text-5xl text-white tracking-[10px] text-center mt-[70px] sm:mt-24 title">
+        <h1 className="text-5xl md:text-5xl text-white tracking-[10px] text-center mt-[110px] sm:mt-24 title">
           ASSETS STORE
         </h1>
 
-        <p className="text-center sm:block sm:text-left text-lg md:text-xl md:w-[1200px] mt-7 sm:mt-7 px-3 text-white tracking-[4px] font-semibold rounded-lg mx-auto">
+        <p className="hidden stext-center sm:block sm:text-left text-lg md:text-xl md:w-[1200px] mt-7 sm:mt-7 px-3 text-white tracking-[4px] font-semibold rounded-lg mx-auto">
           Le marché des créateurs numériques, offrant une large gamme de
           scripts, assets, et ressources pour vos jeux vidéos, logiciels,
           projets...
         </p>
+
+        <p className="sm:hidden text-center  text-xl md:text-xl md:w-[1200px] mt-7 sm:mt-7 px-3 text-white tracking-[4px] font-semibold rounded-lg mx-auto">
+          Le marché des créateurs numériques (assets, scripts, ressources...)
+        </p>
+
 
         <Circles />
 
@@ -29,7 +34,7 @@ export default function S1_home() {
             shimmerColor="#8A0AF9"
             className="shadow-md shadow-white hover:scale-105 transition-transform duration-300 ease-in-out"
           >
-            <span className="uppercase tracking-[4px] whitespace-pre-wrap text-center font-bold leading-none text-black text-xl">
+            <span className="uppercase tracking-[4px] whitespace-pre-wrap text-center font-bold leading-none text-black text-md sm:text-xl">
               Rejoindre le discord
             </span>
           </ShimmerButton>

@@ -97,10 +97,11 @@ export default function Asset() {
   sortedMedias[currentIndex] &&
   (sortedMedias[currentIndex].includes("youtu.be") || sortedMedias[currentIndex].includes("www.youtube.com"));
 
-  const iframeUrl = sortedMedias[currentIndex]
-  .replace("youtu.be/", "youtube.com/embed/")
-  .replace("watch?v=", "embed/");
-
+  const iframeUrl = isYouTubeVideo
+  ? sortedMedias[currentIndex]
+      .replace("youtu.be/", "youtube.com/embed/")
+      .replace("watch?v=", "embed/")
+  : "";
 
   if (!asset) {
     return <div>Asset non trouvée</div>; 
@@ -132,7 +133,7 @@ export default function Asset() {
     <>
       <Navbar />
 
-      <div className="relative flex flex-wrap justify-center mt-10 gap-5">
+      <div className="relative flex flex-wrap justify-center mt-10 gap-5 z-10">
         <div className="relative w-[345px] sm:w-[700px] h-96 rounded-lg border border-white overflow-hidden">
           {/* Vérifie s'il y a des médias à afficher */}
           {sortedMedias.length > 0 ? (
@@ -222,15 +223,20 @@ export default function Asset() {
             </div>
 
             <div className="flex mt-4 gap-2">
-              <p className="flex justify-center gap-4 p-1 w-20 bg-white rounded-lg tracking-wide font-bold text-center">
-                {asset.likes}
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
+              <p className="flex p-1 pl-1 items-center gap-2 w-20 bg-white rounded-lg tracking-wide font-bold text-center">
+              <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                 <path d="M19.5399 12.5799L12.4999 19.7499L5.42993 12.5499C3.83993 10.9399 3.84993 8.06994 5.44993 6.46994C7.04993 4.86994 9.65993 4.85994 11.2699 6.44994L11.3099 6.48994C11.7299 6.90994 12.0399 7.40994 12.2299 7.93994C12.4199 8.39994 12.4999 8.54994 12.4999 8.54994C12.4999 8.54994 12.5799 8.40994 12.7599 7.93994C12.9699 7.39994 13.2799 6.89994 13.7099 6.45994C15.3199 4.84994 17.9399 4.84994 19.5499 6.45994C21.1599 8.06994 21.1599 10.9499 19.5499 12.5599L19.5399 12.5799Z" fill="#121331" stroke="#121331" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
+                {asset.likes}
               </p>
-              <p className="p-1 w-20 bg-white rounded-lg tracking-wide font-bold text-center">
+
+              <p className="flex p-1 pl-1 items-center gap-2 w-20 bg-white rounded-lg tracking-wide font-bold text-center">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
+                <path fill-rule="evenodd" d="M19.5 21a3 3 0 0 0 3-3V9a3 3 0 0 0-3-3h-5.379a.75.75 0 0 1-.53-.22L11.47 3.66A2.25 2.25 0 0 0 9.879 3H4.5a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h15Zm-6.75-10.5a.75.75 0 0 0-1.5 0v4.19l-1.72-1.72a.75.75 0 0 0-1.06 1.06l3 3a.75.75 0 0 0 1.06 0l3-3a.75.75 0 1 0-1.06-1.06l-1.72 1.72V10.5Z" clip-rule="evenodd" />
+              </svg>
               {asset.nb_dl} 
               </p>
+              
               <p className="sm:hidden rounded-lg mt-2 text-white uppercase tracking-wide font-bold">
                   Post : {asset.created_at}
               </p>
@@ -250,7 +256,7 @@ export default function Asset() {
       <p className="text-white text-center sm:text-left text-md px-4 sm:px-56 my-3 font-bold">
         {asset.description}
       </p>
-      <Meteors number={30} />
+      <Meteors number={30} className="z-0" />
     </>
   );
 }

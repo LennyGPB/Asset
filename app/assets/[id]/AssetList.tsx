@@ -110,7 +110,7 @@ export default function AssetsList({ assets, tags, categorie }: AssetsListProps)
 
       </div>
 
-      <div className="flex flex-wrap justify-center sm:gap-10 sm:mt-5 sm:mb-5">
+      <div className="flex flex-wrap justify-center gap-5 sm:gap-10 mt-5 sm:mb-5">
         {filteredAssets.length === 0 ? (
           <div className="text-white text-center text-2xl mt-10 tracking-widest">Aucun asset trouvé</div>
         ) : (
