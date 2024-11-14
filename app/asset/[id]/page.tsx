@@ -256,7 +256,7 @@ export default function Asset() {
       <p className="text-white text-center sm:text-left text-md px-4 sm:px-56 my-3 font-bold">
         {asset.description}
       </p>
-      <Meteors number={30} className="z-0" />
+      <Meteors number={30}  />
     </>
   );
 }
