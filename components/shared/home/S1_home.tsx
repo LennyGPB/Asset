@@ -27,17 +27,19 @@ export default function S1_home() {
         <Circles />
 
         <div className="flex justify-center mt-8 px-8 sm:px-0 sm:mt-10 mb-16">
-          <ShimmerButton
-            background="#FFFF"
-            borderRadius="15px"
-            shimmerSize="0.15em"
-            shimmerColor="#8A0AF9"
-            className="shadow-md shadow-white hover:scale-105 transition-transform duration-300 ease-in-out"
-          >
-            <span className="uppercase tracking-[4px] whitespace-pre-wrap text-center font-bold leading-none text-black text-md sm:text-xl">
-              Rejoindre le discord
-            </span>
-          </ShimmerButton>
+          <a href="https://discord.gg/WdyfxACn3G" target="blank">
+            <ShimmerButton
+              background="#FFFF"
+              borderRadius="15px"
+              shimmerSize="0.15em"
+              shimmerColor="#8A0AF9"
+              className="shadow-md shadow-white hover:scale-105 transition-transform duration-300 ease-in-out"
+            >
+              <span className="uppercase tracking-[4px] whitespace-pre-wrap text-center font-bold leading-none text-black text-md sm:text-xl">
+                Rejoindre le discord
+              </span>
+            </ShimmerButton>
+          </a>
         </div>
       </section>
 

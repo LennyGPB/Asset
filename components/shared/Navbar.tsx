@@ -37,8 +37,8 @@ export default function Navbar() {
     <>
       <nav className="mt-4 mx-3 sm:mx-14 flex flex-col text-white z-50">
         <div className="relative justify-center gap-3 sm:justify-between flex sm:items-center">
-          <Link href="/" className="flex items-center gap-7">
-            <Image src="/medias/logo_asset_temporaire.png" alt="Logo" width={50} height={50} className="hidden sm:block"/>
+          <Link href="/" className="flex items-center gap-5">
+            <Image src="/medias/asset_logo4.png" alt="Logo" width={37} height={37} className="hidden sm:block"/>
             <p className="hidden sm:block text-md tracking-widest text-white neon-effect">by InTheGleam</p>
           </Link>
           
