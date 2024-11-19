@@ -14,7 +14,8 @@ interface Asset {
   slogan: string;
   prix: number;
   description: string;
-  created_at: string;
+  created_at: Date;
+  updated_at: Date;
   likes: number;
   nb_dl: number;
   categorie: { nom: string; };
@@ -64,11 +65,13 @@ export default function Asset() {
     fetchAsset();
   }, [id]);
 
-  const dateAsset = asset ? new Date(asset.created_at).toLocaleDateString('fr-FR', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  }) : '';
+  const options: Intl.DateTimeFormatOptions = {
+    year: "2-digit",
+    month: "2-digit",
+    day: "2-digit",
+  };
+  const postDate = new Intl.DateTimeFormat("fr-FR", options).format(asset?.created_at);
+  const updateDate = new Intl.DateTimeFormat("fr-FR", options).format(asset?.updated_at);
   
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -122,7 +125,7 @@ export default function Asset() {
   
     if (response.ok) {
       const data = await response.json();
-      window.location.href = data.url;
+      window.location.href = "https://asset-three.vercel.app/";
     } else {
       console.error('Erreur lors de l’achat de l’asset');
     }
@@ -132,8 +135,7 @@ export default function Asset() {
   return (
     <>
       <Navbar />
-
-      <div className="relative flex flex-wrap justify-center mt-10 gap-5 z-10">
+      <div className="relative flex flex-wrap justify-center mt-16 sm:mt-10 gap-5 z-10">
         <div className="relative w-[345px] sm:w-[700px] h-96 rounded-lg border border-white overflow-hidden">
           {/* Vérifie s'il y a des médias à afficher */}
           {sortedMedias.length > 0 ? (
@@ -197,7 +199,7 @@ export default function Asset() {
                 <button
                   onClick={handleBuyAsset}
                   type="button"
-                  className="absolute bottom-40 sm:bottom-56 tracking-widest button p-2 rounded-lg text-white font-bold uppercase hover:scale-105 transition duration-300"
+                  className="absolute bottom-[203px] sm:bottom-56 tracking-widest button p-2 rounded-lg text-white font-bold uppercase hover:scale-105 transition duration-300"
                 >
                   Acheter cet asset
                 </button>
@@ -237,13 +239,14 @@ export default function Asset() {
               {asset.nb_dl} 
               </p>
               
-              <p className="sm:hidden rounded-lg mt-2 text-white uppercase tracking-wide font-bold">
-                  Post : {asset.created_at}
-              </p>
+            
             </div>
 
-            <p className="hidden sm:block rounded-lg sm:mt-10 text-white uppercase tracking-wide font-bold">
-             Post : {asset.created_at}
+            <p className="hidden sm:block rounded-lg sm:mt-10 text-white uppercase tracking-wide">
+             <span className="font-bold">Post :</span> {postDate} - - <span className="font-bold">Update :</span> {updateDate}
+            </p>
+            <p className="sm:hidden rounded-lg mt-4 text-white uppercase tracking-wide">
+            <span className="font-bold">Post :</span> {postDate} - - <span className="font-bold">Update :</span> {updateDate}
             </p>
           </div>
         </div>

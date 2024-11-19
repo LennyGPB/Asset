@@ -5,7 +5,7 @@ import { useMotionValue, motion, useMotionTemplate } from "framer-motion";
 import { useState } from "react";
 
 
-export default function Cardv2({ lienImage, titre, prix, description, id, userId, likes}: {lienImage: string; titre: string; prix: number; description: string; id: number; userId: string; likes: number;}) {
+export default function Cardv2({ lienImage, titre, prix, description, id, userId, likes, update}: {lienImage: string; titre: string; prix: number; description: string; id: number; userId: string; likes: number; update: string}) {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
@@ -46,14 +46,15 @@ export default function Cardv2({ lienImage, titre, prix, description, id, userId
   
 
   return (
+    <>
     <div
-    onMouseMove={(e) => {
+     onMouseMove={(e) => {
       const { left, top } = e.currentTarget.getBoundingClientRect();
       mouseX.set(e.clientX - left);
       mouseY.set(e.clientY - top);
     }}
     className="group relative max-w-[320px] w-full overflow-hidden rounded-xl bg-neutral-900"
-  >
+    >
     <div className="absolute right-5 top-0 h-px w-80 bg-gradient-to-l from-transparent via-white/30 via-10% to-transparent" />
     
     <motion.div
@@ -65,8 +66,10 @@ export default function Cardv2({ lienImage, titre, prix, description, id, userId
       }}
     />
   
+  
     <div className="relative flex flex-col h-[410px]  rounded-xl border border-white/30 px-4 py-5 justify-between">
       {/* Contenu principal */}
+      <p className="absolute z-10 text-black text-[12px] p-1 m-2 rounded-md tracking-wide font-bold bg-white/70">Dernière m.a.j : {update}</p>
       <div className="flex-grow space-y-2">
         <Image
           src={lienImage}
@@ -110,6 +113,6 @@ export default function Cardv2({ lienImage, titre, prix, description, id, userId
       </div>
     </div>
   </div>
-  
+  </>
   );
 }

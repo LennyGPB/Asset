@@ -54,14 +54,14 @@ export default function Navbar() {
                   <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Recherchez un asset..." className="p-1 w-[265px] sm:w-[500px] text-white bg-black border border-neutral-500 rounded-md placeholder:text-neutral-500 focus:border-purple" name="query"/>
                 </form> */}
 
-                <form method="GET" onSubmit={handleSearch} className="sm:hidden sm:absolute sm:left-1/2 sm:transform sm:-translate-x-1/2 ">
-                  <button type="button" onClick={() => setIsModalCategoryOpen(true)} className="p-1 w-[265px] sm:w-[500px] text-white bg-black border border-neutral-500 rounded-md uppercase tracking-widest font-semibold shadow-sm shadow-white/10 placeholder:text-neutral-500 focus:border-purple" name="query">Consulter les Assets</button>
+                <form method="GET" onSubmit={handleSearch} className="lg:hidden">
+                  <button type="button" onClick={() => setIsModalCategoryOpen(true)} className="p-1 w-[265px] text-white bg-black border border-neutral-500 rounded-md uppercase tracking-widest font-semibold shadow-sm shadow-white/10 placeholder:text-neutral-500 focus:border-purple" name="query">Consulter les Assets</button>
                 </form>
                 
                 
                 {session ? (
               <button onClick={() => setIsDropdownOpen(!isDropdownOpen)} type="button" aria-hidden="true" className="sm:hidden">
-                  <Image src={session?.user.image || ""} alt="Profile picture" width={50} height={50} className="sm:hidden rounded-full w-14 h-10"/>
+                  <Image src={session?.user.image || ""} alt="Profile picture" width={50} height={50} className="sm:hidden rounded-full w-11 h-10"/>
                   </button>
                 ) : (
                   <button type="button" onClick={() => signIn("discord")} aria-hidden="true" className="sm:hidden">
@@ -120,6 +120,12 @@ export default function Navbar() {
                         Se connecter
                       </a>
                     )}
+                    <a href="/login" className="text-center text-sm p-1 mt-5 tracking-wider uppercase rounded-md button">
+                        Devenir vendeur
+                      </a>
+                      <form method="GET" onSubmit={handleSearch} className=" ">
+                        <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Ballon..." className="p-1 w-[155px] mt-5 text-white bg-black border border-neutral-500 rounded-md placeholder:text-neutral-500 focus:border-purple" name="query"/>
+                      </form>
                     <h2 className="text-xl font-bold mb-4 mt-4">Catégories</h2>
                     {categories.map((category) => (
                       <a
@@ -142,14 +148,12 @@ export default function Navbar() {
                 </div>
             </div>
 
-
-
-          <form method="GET" onSubmit={handleSearch} className="hidden sm:block sm:absolute sm:left-1/2 sm:transform sm:-translate-x-1/2 ">
-            <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Recherchez un asset..." className="p-1 w-[265px] sm:w-[500px] mt-1 sm:mt-0 text-white bg-black border border-neutral-500 rounded-md placeholder:text-neutral-500 focus:border-purple" name="query"/>
+          <form method="GET" onSubmit={handleSearch} className="hidden sm:flex justify-center lg:block lg:absolute lg:left-1/2 lg:transform lg:-translate-x-1/2 ">
+            <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Recherchez un asset..." className="p-1 w-[270px] lg:w-[500px] mt-1 sm:mt-0 text-white bg-black border border-neutral-500 rounded-md placeholder:text-neutral-500 focus:border-purple" name="query"/>
           </form>
 
           <div className="hidden sm:flex items-center gap-3">
-          <a href="/profile" className="hidden sm:block uppercase button rounded-md px-3 p-1 tracking-wider text-md mr-5 hover:scale-105 transition-transform duration-300 ease-in-out">
+          <a href="/profile" className="hidden lg:block uppercase button rounded-md px-3 p-1 tracking-wider text-md mr-5 hover:scale-105 transition-transform duration-300 ease-in-out">
             Devenir vendeur
           </a>
             {session ? (
@@ -175,15 +179,20 @@ export default function Navbar() {
         <div className="absolute top-14 right-0 mr-2 sm:mr-28 mt-2 w-40 sm:w-48 bg-white text-black rounded-lg shadow-lg z-50">
           <ul className="flex flex-col">
             <li className="p-2 hover:bg-gray-100">
-              <a href={`/profil/${session?.user.id}/post`}>Mes Assets</a>
+              <a href={`/profil/${session?.user.id}/post`}>Mon profil</a>
             </li>
             {session?.user.role === 'admin' && (
               <li className="p-2 hover:bg-gray-100">
                 <Link href="/admin">Administration</Link>
               </li>
             )}
+            {(session?.user.role === 'admin' || session?.user.role === 'seller') && (
+              <li className="p-2 hover:bg-gray-100">
+                <Link href="/formAsset">Créer un Asset</Link>
+              </li>
+            )}
             <li className="sm:hidden p-2 hover:bg-gray-100">
-              <a href="/profile">Mes favoris</a>
+              <Link href={`/save/${session?.user.id}`}>Mes favoris</Link>
             </li>
             <hr className="border-gray-300" />
             <li className="p-2 hover:bg-gray-100">

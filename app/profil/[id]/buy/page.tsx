@@ -9,6 +9,7 @@ interface Asset {
   id_asset: number;
   image_couverture: string | null;
   file_url: string | null;
+  updatedAt: Date;
   titre: string;
   prix: number;
   description: string;
@@ -35,7 +36,12 @@ export default function Buy() {
     }
   }, [id]);
 
-  console.log(buyedAssets);
+  const options: Intl.DateTimeFormatOptions = {
+    year: "2-digit",
+    month: "2-digit",
+    day: "2-digit",
+  };
+  const update = buyedAssets.length > 0 ? new Intl.DateTimeFormat("fr-FR", options).format(new Date(buyedAssets[0].updatedAt)) : "00/00/00";
 
   return (
    <>
@@ -43,7 +49,7 @@ export default function Buy() {
 
    <div className="flex flex-wrap gap-2 sm:gap-10 mt-10 sm:mb-10 justify-center">
     {buyedAssets.map((asset: Asset) => (
-      <ProfilCardBuy key={asset.id_asset} lienImage={asset.image_couverture || ""} titre={asset.titre} prix={asset.prix} description={asset.description} id={asset.id_asset} userId={id} likes={asset.likes} />
+      <ProfilCardBuy key={asset.id_asset} lienImage={asset.image_couverture || ""} titre={asset.titre} prix={asset.prix} description={asset.description} id={asset.id_asset} userId={id} likes={asset.likes} update={update}  />
     ))}
    </div>
    </>

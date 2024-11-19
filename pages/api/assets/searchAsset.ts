@@ -17,6 +17,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             { description: { contains: query}},
           ],
       },
+      take: 10,
     });
 
     return res.status(200).json(assets);

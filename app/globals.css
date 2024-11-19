@@ -10,6 +10,12 @@
   scroll-behavior: smooth;
 }
 
+@media (max-width: 768px) {
+  * {
+    overflow-x: hidden;
+  }
+}
+
 :root {
   --background: #151515;
   --font-geist-sans: "Geist Sans", sans-serif;

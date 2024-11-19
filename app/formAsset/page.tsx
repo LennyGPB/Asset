@@ -212,9 +212,9 @@ export default function FormAsset() {
       <ScrollTextEffectOne text={"Créer son Asset - "} size="3xl mt-7 sm:mt-0" />
 
       <form onSubmit={handleSubmit} method="POST" encType="multipart/form-data">
-        <div className="mx-auto flex justify-center text-white  p-7 rounded-lg w-[900px] ">
-          <div className="flex flex-col">
-            <div className="flex gap-20 justify-between mt-5">
+        <div className="mx-auto flex justify-center text-white p-7 rounded-lg sm:w-[900px] ">
+            <div className="flex flex-col sm:items-stretch items-center">
+            <div className="flex flex-col sm:flex-row gap-5 sm:gap-20 justify-between mt-5">
               <input
                 type="text"
                 name="titre"
@@ -224,33 +224,29 @@ export default function FormAsset() {
                 placeholder="Nom de l'Asset"
               />
 
-              <select
-                name="categorieId"
-                value={formData.categorieId}
-                onChange={handleChange}
-                className="bg-black text-white h-10 w-60 rounded-md px-2"
-              >
-                <option value="" disabled hidden>
-                  Catégorie
-                </option>
-                {categories.map((category) => (
-                  <option
-                    key={category.id_categorie}
-                    value={category.id_categorie}
-                  >
-                    {category.nom}
-                  </option>
-                ))}
-              </select>
+              
+              <div className="flex sm:flex-row sm:gap-20 gap-2">
+                <select name="categorieId" value={formData.categorieId} onChange={handleChange} className="bg-black text-white h-10 w-[227px] sm:w-60 rounded-md px-2">
+                  <option value="" disabled hidden> Catégorie </option>
+                  {categories.map((category) => (
+                    <option
+                      key={category.id_categorie}
+                      value={category.id_categorie}
+                    >
+                      {category.nom}
+                    </option>
+                  ))}
+                </select>
 
-              <input
-                type="text"
-                name="prix"
-                value={formData.prix}
-                onChange={handleChange}
-                className="bg-black text-white h-10 w-24 rounded-md  px-2 placeholder:text-white"
-                placeholder="Prix"
-              />
+                <input
+                  type="text"
+                  name="prix"
+                  value={formData.prix}
+                  onChange={handleChange}
+                  className="bg-black text-white h-10 w-24 rounded-md  px-2 placeholder:text-white"
+                  placeholder="Prix"
+                />
+              </div>
             </div>
 
             <input
@@ -283,7 +279,7 @@ export default function FormAsset() {
               Choisissez jusqu'à 3 tags
             </p>
 
-            <div className="flex justify-center gap-5 mt-3">
+            <div className="flex flex-col sm:flex-row justify-center gap-5 mt-3">
               <select
                 value={formData.tagIds[0]}
                 onChange={(e) => handleTagChange(e, 0)}
@@ -330,7 +326,7 @@ export default function FormAsset() {
               </select>
             </div>
 
-            <p className="font-bold text-lg tracking-widest mt-5">Importer votre image de couverture :</p>
+            <p className="font-bold text-center sm:text-left text-lg tracking-widest mt-5">Importer votre image de couverture :</p>
             <div className="flex justify-center">
               <input name="coverImage" type="file" onChange={handleCoverImageChange} className="bg-black text-white h-10 w-96 mt-3 rounded-md  px-2" />
             </div>
@@ -387,7 +383,7 @@ export default function FormAsset() {
                 name="assetFile"
                 onChange={handleAssetFileChange}
                 type="file"
-                className="bg-black text-white h-10 w-96 mt-3 rounded-md  px-2 placeholder:text-white"
+                className="bg-black text-white h-10 rounded-md w-96 mt-3   px-2 placeholder:text-white"
               />
             </div>
             <button type="submit" className="button text-white font-bold tracking-widest mx-auto h-10 w-60 mt-5 rounded-lg uppercase px-2 hover:scale-105 transition-all duration-500">Confirmer</button>
