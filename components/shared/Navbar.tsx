@@ -7,14 +7,20 @@ import { useRouter } from "next/navigation";
 import { usePathname } from 'next/navigation';
 import Link from "next/link";
 
+function getRandomInt(min: number, max: number) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 export default function Navbar() {
   const { data: session, status } = useSession();
+  const id = session?.user.id;
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
   const [categories, setCategories] = useState<Array<{ id_categorie: string; nom: string }>>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isModalCategoryOpen, setIsModalCategoryOpen] = useState(false);
+  const [isModalVendeurOpen, setIsModalVendeurOpen] = useState(false);
   const pathname = usePathname();
   
 
@@ -31,7 +37,31 @@ export default function Navbar() {
       router.push(`/assetSearch?query=${encodeURIComponent(searchQuery)}`);
     }
   };;
-  
+
+  const handleCreateChannel = async () => {
+    const randomNum = getRandomInt(1, 1000); 
+    try {
+      const response = await fetch("/api/discord/createChannel", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          channelName: `vendeur-${id}-${randomNum}`,
+          userId: Number(id),
+        }),
+      });
+
+      const data = await response.json();
+      if (data.error) {
+        throw new Error(data.error);
+      }
+
+      console.log("Canal créé avec succès:", data.channelId);
+    } catch (error) {
+      console.error("Erreur lors de la création du canal Discord:", error);
+    }
+  };
 
   return (
     <>
@@ -59,17 +89,9 @@ export default function Navbar() {
                 </form>
                 
                 
-                {session ? (
-              <button onClick={() => setIsDropdownOpen(!isDropdownOpen)} type="button" aria-hidden="true" className="sm:hidden">
-                  <Image src={session?.user.image || ""} alt="Profile picture" width={50} height={50} className="sm:hidden rounded-full w-11 h-10"/>
-                  </button>
-                ) : (
-                  <button type="button" onClick={() => signIn("discord")} aria-hidden="true" className="sm:hidden">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-9">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9" />
-                  </svg>
-                  </button>
-                )}
+                  <Link href="/" aria-hidden="true" className="sm:hidden">
+                    <Image src="/medias/asset_logo4.png" alt="Profile picture" width={32} height={32} className="sm:hidden"/>
+                  </Link>
             </div>
 
                 {/* MODAL CATEGORIE ------------------------------------------------------------------- */}
@@ -102,60 +124,76 @@ export default function Navbar() {
               <div className={`fixed top-0 left-0 h-screen w-full z-50  text-white ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out`}
                 onClick={() => setIsMobileMenuOpen(false)} 
               >
-                <div className="fixed top-0 left-0 h-screen w-1/2 bg-black p-5" onClick={(event) => event.stopPropagation()}>
+                <div className="fixed top-0 left-0 h-screen w-[280px] bg-black/95 p-5" onClick={(event) => event.stopPropagation()}>
                   <div className="flex flex-col">
                     {session ? (
                       <div className="flex items-center gap-3">
                         <Image
-                          src={session.user.image || ''}
+                          src="/medias/asset_logo4.png"
                           alt="Profile picture"
-                          width={50}
-                          height={50}
-                          className="rounded-full w-10 h-10"
+                          width={30}
+                          height={30}
                         />
-                        <p className="ml-2">{session.user.name}</p>
+                        <p className="ml-2 neon-effect tracking-widest">by InTheGleam</p>
                       </div>
                     ) : (
                       <a href="/login" className="text-center p-1 tracking-wider uppercase rounded-md button">
                         Se connecter
                       </a>
                     )}
-                    <a href="/login" className="text-center text-sm p-1 mt-5 tracking-wider uppercase rounded-md button">
-                        Devenir vendeur
-                      </a>
-                      <form method="GET" onSubmit={handleSearch} className=" ">
-                        <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Ballon..." className="p-1 w-[155px] mt-5 text-white bg-black border border-neutral-500 rounded-md placeholder:text-neutral-500 focus:border-purple" name="query"/>
-                      </form>
-                    <h2 className="text-xl font-bold mb-4 mt-4">Catégories</h2>
-                    {categories.map((category) => (
-                      <a
-                        href={`/assets/${category.id_categorie}`}
-                        key={category.id_categorie}
-                        type="button"
-                        className="mb-2"
-                      >
-                        {category.nom}
-                      </a>
-                    ))}
-                    <button
-                      type="button"
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className="mt-2 bg-white text-black rounded-md font-bold"
-                    >
-                      Fermer
-                    </button>
+                    <a href="/login" className="text-center text-sm p-1 mt-5 tracking-wider uppercase rounded-md button">Devenir vendeur</a>
+
+                    <form method="GET" onSubmit={handleSearch} className=" ">
+                        <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Ballon..." className="p-1 w-full mt-5 text-white bg-black border border-neutral-500 rounded-md placeholder:text-neutral-500 focus:border-purple" name="query"/>
+                    </form>
+
+                    <div className="flex items-center gap-3 mt-5">
+                        <Image
+                          src={session?.user.image || ''}
+                          alt="Profile picture"
+                          width={50}
+                          height={50}
+                          className="rounded-full w-10 h-10"
+                        />
+                        <p className="ml-2 tracking-widest">{session?.user.name}</p>
+                      </div>
+
+                    <Link href={`/profil/${session?.user.id}/post`} className="mt-5 tracking-widest font-semibold">Mon profil</Link>
+                    <Link href={`/save/${session?.user.id}`} className="mt-3 tracking-widest font-semibold">Mes favoris</Link>
+                    {session?.user.role === 'admin' && (
+                      <Link href="/admin" className="mt-3 tracking-widest font-semibold">Administration</Link>
+                    )}
+                    {(session?.user.role === 'admin' || session?.user.role === 'seller') && (
+                      <Link href="/formAsset" className="mt-3 tracking-widest text-black text-center bg-white w-48 rounded-md font-bold">Créer un Asset</Link>
+                    )}
+                    <button onClick={() => signOut()} type="button" className="mt-3 tracking-widest text-black w-48 rounded-md font-bold bg-white">Se déconnecter</button>
+                    {/* <button type="button" onClick={() => setIsMobileMenuOpen(false)} className="mt-2 bg-white text-black rounded-md font-bold">Fermer</button>             */}
                   </div>
                 </div>
             </div>
+
+            {isModalVendeurOpen && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md bg-black bg-opacity-50" onClick={() => setIsModalVendeurOpen(false)}>
+                  <div className="flex flex-col justify-center items-center gap-2" onClick={(event) => event.stopPropagation()}>
+                    <p className="font-bold text-2xl tracking-widest rounded-md uppercase">Vous souhaitez devenir vendeur ?</p>
+                    <p className="font-bold text-sm tracking-widest rounded-md uppercase">Un ticket sera automatiquement ouvert sur le discord.</p>
+                    <div className="flex gap-3">
+                    <button type="button" onClick={() => setIsModalVendeurOpen(false)} className="bg-white/70 text-black rounded-md font-bold p-2 w-52 uppercase mt-4 hover:scale-105 transition duration-500">Annuler</button>
+                    <button type="button" onClick={handleCreateChannel} className="bg-white text-black rounded-md font-bold p-2 w-52 uppercase mt-4 hover:scale-105 transition duration-500">Devenir vendeur</button>
+
+                    </div>
+                  </div>
+                </div>
+                )}
 
           <form method="GET" onSubmit={handleSearch} className="hidden sm:flex justify-center lg:block lg:absolute lg:left-1/2 lg:transform lg:-translate-x-1/2 ">
             <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Recherchez un asset..." className="p-1 w-[270px] lg:w-[500px] mt-1 sm:mt-0 text-white bg-black border border-neutral-500 rounded-md placeholder:text-neutral-500 focus:border-purple" name="query"/>
           </form>
 
           <div className="hidden sm:flex items-center gap-3">
-          <a href="/profile" className="hidden lg:block uppercase button rounded-md px-3 p-1 tracking-wider text-md mr-5 hover:scale-105 transition-transform duration-300 ease-in-out">
+          <button onClick={() => setIsModalVendeurOpen(true)} type="button" className="hidden 2xl:block uppercase button rounded-md px-3 p-1 tracking-wider text-md mr-5 hover:scale-105 transition-transform duration-300 ease-in-out">
             Devenir vendeur
-          </a>
+          </button>
             {session ? (
               <div className="flex items-center gap-3">
                 <button type="button" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
@@ -191,6 +229,9 @@ export default function Navbar() {
                 <Link href="/formAsset">Créer un Asset</Link>
               </li>
             )}
+            <li className="p-2 hover:bg-gray-100">
+              <button onClick={() => setIsModalVendeurOpen(true)} type="button" >Devenir vendeur</button>
+            </li>
             <li className="sm:hidden p-2 hover:bg-gray-100">
               <Link href={`/save/${session?.user.id}`}>Mes favoris</Link>
             </li>

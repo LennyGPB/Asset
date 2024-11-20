@@ -6,6 +6,7 @@ import Card from "../../../components/shared/Card";
 import Meteors from "@/components/magicui/meteors";
 import ScrollTextEffectOne from "@/components/shared/ScrollTextEffectOne";
 import Cardv2 from "@/components/shared/Cardv2";
+import Footer from "@/components/shared/Footer";
 
 interface Tag {
   id_tags: number;
@@ -79,7 +80,7 @@ export default function AssetsList({ assets, tags, categorie }: AssetsListProps)
           viewBox="0 0 24 24"
           strokeWidth="1.5"
           stroke="currentColor"
-          className="hidden sm:block  size-16 text-white opacity-70 rounded-full p-2 hover:opacity-100 hover:scale-105 transition-all duration-300"
+          className="hidden sm:block size-16 text-white opacity-70 rounded-full p-2 hover:opacity-100 hover:scale-105 transition-all duration-300"
           aria-labelledby="3D"
         >
           <title id="svg1Title">3D</title>
@@ -110,7 +111,7 @@ export default function AssetsList({ assets, tags, categorie }: AssetsListProps)
 
       </div>
 
-      <div className="flex flex-wrap justify-center gap-5 sm:gap-10 mt-5 sm:mb-5">
+      <div className="flex flex-wrap justify-center gap-5 sm:gap-10 mt-9 sm:mb-5">
         {filteredAssets.length === 0 ? (
           <div className="text-white text-center text-2xl mt-10 tracking-widest">Aucun asset trouvé</div>
         ) : (
@@ -128,6 +129,7 @@ export default function AssetsList({ assets, tags, categorie }: AssetsListProps)
         )}
       </div>
       <Meteors number={30} />
+      <Footer />
     </>
      
   );

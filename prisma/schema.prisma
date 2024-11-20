@@ -128,7 +128,7 @@ model Possession {
 
 model Account {
   id                Int       @id @default(autoincrement())
-  userId            Int
+  userId            Int       @unique
   type              String
   provider          String
   providerAccountId String

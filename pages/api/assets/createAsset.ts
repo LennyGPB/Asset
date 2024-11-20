@@ -1,3 +1,4 @@
+import { Client, GatewayIntentBits, PermissionsBitField, ChannelType, TextChannel  } from "discord.js";
 import type { NextApiRequest, NextApiResponse } from "next";
 import upload from "@/lib/multer";
 import { uploadPublicFile, uploadPrivateFile } from "@/lib/azureBlob";
@@ -17,6 +18,11 @@ export type NextApiRequestWithFiles = NextApiRequest & {
   };
 };
 
+const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+
+const DISCORD_TOKEN = process.env.DISCORD_TOKEN;
+client.login(DISCORD_TOKEN);
+
 export default async function handler(req: NextApiRequestWithFiles, res: NextApiResponse) {
   if (req.method !== "POST") {
     res.setHeader("Allow", ["POST"]);
@@ -35,6 +41,9 @@ export default async function handler(req: NextApiRequestWithFiles, res: NextApi
 
     try {
       const { titre, description, prix, slogan, categorieId, tagIds, userId, urlYoutube } = req.body;
+      const guildId = "1298971983437889588";
+      const guild = client.guilds.cache.get(guildId);
+      const channel = guild?.channels.cache.get("1308528457130573906");
 
       const tagIdsArray = Array.isArray(tagIds)
         ? tagIds.map((id: string) => Number.parseInt(id, 10)).filter((id: number) => !isNaN(id))
@@ -142,7 +151,11 @@ export default async function handler(req: NextApiRequestWithFiles, res: NextApi
       }));
       await prisma.assetTags.createMany({ data: createData });
 
-      // Réponse de succès
+     if (channel?.isTextBased()) {
+      await (channel as TextChannel).send(`Un nouvel **asset** a été créé : **__${titre}__**`);
+    } else {
+      console.error("Le canal spécifié n'est pas textuel.");
+    }
       res.status(200).json({ message: "Asset créé avec succès", asset: newAsset });
     } catch (error) {
       console.error(error);
