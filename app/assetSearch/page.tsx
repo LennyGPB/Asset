@@ -4,6 +4,7 @@ import { useSearchParams } from 'next/navigation';
 import { useEffect, useState, Suspense } from 'react';
 import Cardv2 from "@/components/shared/Cardv2";
 import Navbar from '@/components/shared/Navbar';
+import Footer from '@/components/shared/Footer';
 
 function SearchResultsContent() {
   const searchParams = useSearchParams();

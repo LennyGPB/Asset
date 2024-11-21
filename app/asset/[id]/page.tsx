@@ -7,6 +7,7 @@ import { use, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Meteors from "@/components/magicui/meteors";
 import { useSession } from "next-auth/react";
+import Footer from "@/components/shared/Footer";
 
 interface Asset {
   id: string;
@@ -126,7 +127,10 @@ export default function Asset() {
     if (response.ok) {
       const data = await response.json();
       window.location.href = "https://asset-three.vercel.app/";
-    } else {
+    } else if (response.status === 401) {
+      window.location.href = "/api/auth/signin";
+    }
+    else{
       console.error('Erreur lors de l’achat de l’asset');
     }
   };

@@ -4,6 +4,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { SessionProvider } from "next-auth/react";
 import { LikesProvider } from "@/contexts/LikeContext";
+import Footer from "@/components/shared/Footer";
 
 
 const geistSans = localFont({
@@ -30,13 +31,22 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <SessionProvider>
-        <LikesProvider>
-          <body className={`${geistSans.variable} ${geistMono.variable} ${Venite.variable} antialiased`}>
-            {children}
-          </body>
-        </LikesProvider>
-      </SessionProvider>
-    </html>
+  <SessionProvider>
+    <LikesProvider>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} ${Venite.variable} antialiased`}
+      >
+        <div className="flex flex-col min-h-screen">
+          {/* Contenu principal */}
+          <main className="flex-grow">{children}</main>
+
+          {/* Footer */}
+          <Footer />
+        </div>
+      </body>
+    </LikesProvider>
+  </SessionProvider>
+</html>
+
   );
 }

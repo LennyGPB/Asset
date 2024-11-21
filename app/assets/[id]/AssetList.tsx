@@ -129,7 +129,6 @@ export default function AssetsList({ assets, tags, categorie }: AssetsListProps)
         )}
       </div>
       <Meteors number={30} />
-      <Footer />
     </>
      
   );

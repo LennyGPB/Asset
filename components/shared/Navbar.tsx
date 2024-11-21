@@ -52,6 +52,10 @@ export default function Navbar() {
         }),
       });
 
+      if (response.status === 401) {
+        window.location.href = "/api/auth/signin";
+      }
+
       const data = await response.json();
       if (data.error) {
         throw new Error(data.error);
@@ -121,33 +125,28 @@ export default function Navbar() {
               )}
               
               {/* MENU LATERAL MOBILE ------------------------------------------------------------------- */}
-              <div className={`fixed top-0 left-0 h-screen w-full z-50  text-white ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out`}
-                onClick={() => setIsMobileMenuOpen(false)} 
-              >
+              <div className={`fixed top-0 left-0 h-screen w-full z-50  text-white ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out`} onClick={() => setIsMobileMenuOpen(false)}>
                 <div className="fixed top-0 left-0 h-screen w-[280px] bg-black/95 p-5" onClick={(event) => event.stopPropagation()}>
                   <div className="flex flex-col">
-                    {session ? (
-                      <div className="flex items-center gap-3">
-                        <Image
-                          src="/medias/asset_logo4.png"
-                          alt="Profile picture"
-                          width={30}
-                          height={30}
-                        />
+
+                      <div className="flex items-center gap-3 mb-5">
+                        <Image src="/medias/asset_logo4.png" alt="Profile picture" width={30} height={30}/>                                                                                               
                         <p className="ml-2 neon-effect tracking-widest">by InTheGleam</p>
                       </div>
-                    ) : (
-                      <a href="/login" className="text-center p-1 tracking-wider uppercase rounded-md button">
-                        Se connecter
-                      </a>
-                    )}
-                    <a href="/login" className="text-center text-sm p-1 mt-5 tracking-wider uppercase rounded-md button">Devenir vendeur</a>
+
+                      {!session && (
+                        <a href="/login" className="text-center p-1 mb-3 text-sm tracking-wider uppercase rounded-md button">Se connecter</a>       
+                      )}
+                     {session && (
+                        <a href="/login" className="text-center text-sm p-1 mb-3 tracking-wider uppercase rounded-md button">Devenir vendeur</a> 
+                      )}
 
                     <form method="GET" onSubmit={handleSearch} className=" ">
-                        <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Ballon..." className="p-1 w-full mt-5 text-white bg-black border border-neutral-500 rounded-md placeholder:text-neutral-500 focus:border-purple" name="query"/>
+                        <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Recherche..." className="p-1 w-full  text-white bg-black border border-neutral-500 rounded-md placeholder:text-neutral-500 focus:border-purple" name="query"/>
                     </form>
 
-                    <div className="flex items-center gap-3 mt-5">
+                    {session && (
+                      <div className="flex items-center gap-3 mt-5">  
                         <Image
                           src={session?.user.image || ''}
                           alt="Profile picture"
@@ -157,21 +156,27 @@ export default function Navbar() {
                         />
                         <p className="ml-2 tracking-widest">{session?.user.name}</p>
                       </div>
-
-                    <Link href={`/profil/${session?.user.id}/post`} className="mt-5 tracking-widest font-semibold">Mon profil</Link>
-                    <Link href={`/save/${session?.user.id}`} className="mt-3 tracking-widest font-semibold">Mes favoris</Link>
-                    {session?.user.role === 'admin' && (
-                      <Link href="/admin" className="mt-3 tracking-widest font-semibold">Administration</Link>
+                      )}
+                    
+                    {session && (
+                      <div className="flex flex-col">                     
+                        <Link href={`/profil/${session?.user.id}/post`} className="mt-5 tracking-widest font-semibold">Mon profil</Link>
+                        <Link href={`/save/${session?.user.id}`} className="mt-3 tracking-widest font-semibold">Mes favoris</Link>
+                        {session?.user.role === 'admin' && (
+                          <Link href="/admin" className="mt-3 tracking-widest font-semibold">Administration</Link>
+                        )}
+                        {(session?.user.role === 'admin' || session?.user.role === 'seller') && (
+                          <Link href="/formAsset" className="mt-3 tracking-widest text-black text-center bg-white w-48 rounded-md font-bold">Créer un Asset</Link>
+                        )}
+                        <button onClick={() => signOut()} type="button" className="mt-3 tracking-widest text-black w-48 rounded-md font-bold bg-white">Se déconnecter</button>
+                        {/* <button type="button" onClick={() => setIsMobileMenuOpen(false)} className="mt-2 bg-white text-black rounded-md font-bold">Fermer</button>  */}
+                      </div>
                     )}
-                    {(session?.user.role === 'admin' || session?.user.role === 'seller') && (
-                      <Link href="/formAsset" className="mt-3 tracking-widest text-black text-center bg-white w-48 rounded-md font-bold">Créer un Asset</Link>
-                    )}
-                    <button onClick={() => signOut()} type="button" className="mt-3 tracking-widest text-black w-48 rounded-md font-bold bg-white">Se déconnecter</button>
-                    {/* <button type="button" onClick={() => setIsMobileMenuOpen(false)} className="mt-2 bg-white text-black rounded-md font-bold">Fermer</button>             */}
                   </div>
                 </div>
             </div>
 
+            {/* MENU VENDEUR ------------------------------------------------------------------- */}
             {isModalVendeurOpen && (
             <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md bg-black bg-opacity-50" onClick={() => setIsModalVendeurOpen(false)}>
                   <div className="flex flex-col justify-center items-center gap-2" onClick={(event) => event.stopPropagation()}>

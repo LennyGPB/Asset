@@ -24,7 +24,11 @@ export default function Cardv2({ lienImage, titre, prix, description, id, likes}
       });
   
       const data = await response.json();
-  
+
+      if (response.status === 401) {
+        window.location.href = "/api/auth/signin";
+      }
+      
       if (!response.ok) {
         console.error(data.message); // Affiche le message d’erreur de l’API
       }

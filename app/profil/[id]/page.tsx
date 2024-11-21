@@ -8,6 +8,7 @@ import ScrollTextEffectOne from "@/components/shared/ScrollTextEffectOne";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import ProfilHeader from "@/components/shared/profil/profilHeader";
+import Footer from "@/components/shared/Footer";
 
 interface Asset {
   id_asset: number;
@@ -44,7 +45,6 @@ export default function Profile() {
   return (
    <>
    <ProfilHeader id={id} />
-
    </>
   )
 }

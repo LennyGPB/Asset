@@ -1,5 +1,6 @@
 "use client";
 
+import Footer from "@/components/shared/Footer";
 import Navbar from "@/components/shared/Navbar"
 import ProfilHeader from "@/components/shared/profil/profilHeader"
 import { useParams } from "next/navigation";

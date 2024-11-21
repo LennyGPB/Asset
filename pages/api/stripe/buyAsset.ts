@@ -1,6 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from "@/lib/prisma"; 
 import stripe from '@/lib/stripe';  
+import { getServerSession } from 'next-auth';
+import { authOptions } from "@/lib/auth"; 
+import { redirect } from 'next/dist/server/api-utils';
 
 export const config = {
   api: {
@@ -11,6 +14,13 @@ export const config = {
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
+
+    const session = await getServerSession(req, res, authOptions);
+
+    if(!session) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
     const { assetId, userId } = req.body;
 
     if (!assetId || !userId) {

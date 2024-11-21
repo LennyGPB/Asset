@@ -4,6 +4,7 @@ import ProfilCard from "@/components/shared/profil/profilCard";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import ProfilHeader from "@/components/shared/profil/profilHeader";
+import Footer from "@/components/shared/Footer";
 
 interface Asset {
   id_asset: number;
@@ -41,7 +42,7 @@ export default function Profile() {
    <>
    <ProfilHeader id={id} />
 
-   <div className="flex flex-wrap gap-2 sm:gap-10 mt-10 sm:mb-10 justify-center">
+   <div className="flex flex-wrap gap-2 sm:gap-10 mt-10 justify-center">
     {assets.map((asset: Asset) => (
       <ProfilCard key={asset.id_asset} lienImage={asset.image_couverture || ""} titre={asset.titre} prix={asset.prix} description={asset.description} id={asset.id_asset} likes={asset.likes} />
     ))}
