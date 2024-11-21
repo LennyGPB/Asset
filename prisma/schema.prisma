@@ -47,13 +47,13 @@ model Asset {
   user             User?       @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   categorieId      Int?
-  categorie        Categorie? @relation("appartient", fields: [categorieId], references: [id_categorie])
+  categorie        Categorie? @relation("appartient", fields: [categorieId], references: [id_categorie], onDelete: Cascade)
 
-  medias           AssetMedia[]
+  medias           AssetMedia[] 
   tags             AssetTags[]
   owners           Possession[]
   buyers           Buy[]
-  assetLikes       Likes[]
+  assetLikes       Likes[] 
 }
 
 model User {
@@ -88,8 +88,8 @@ model Likes {
 model AssetMedia {
   assetId Int
   mediaId Int
-  asset   Asset   @relation(fields: [assetId], references: [id_asset])
-  media   Medias  @relation(fields: [mediaId], references: [id_media])
+  asset   Asset   @relation(fields: [assetId], references: [id_asset], onDelete: Cascade)
+  media   Medias  @relation(fields: [mediaId], references: [id_media], onDelete: Cascade)
 
   @@id([assetId, mediaId])
 }
@@ -98,7 +98,7 @@ model AssetTags {
   assetId  Int
   tagId    Int
   asset    Asset @relation(fields: [assetId], references: [id_asset], onDelete: Cascade)
-  tag      Tags  @relation(fields: [tagId], references: [id_tags], name: "TagAssets") // Ajout du nom de la relation
+  tag      Tags  @relation(fields: [tagId], references: [id_tags], name: "TagAssets") 
 
   @@id([assetId, tagId]) // Clé primaire composée
 }

@@ -138,7 +138,7 @@ export default function Navbar() {
                         <a href="/login" className="text-center p-1 mb-3 text-sm tracking-wider uppercase rounded-md button">Se connecter</a>       
                       )}
                      {session && (
-                        <a href="/login" className="text-center text-sm p-1 mb-3 tracking-wider uppercase rounded-md button">Devenir vendeur</a> 
+                        <button onClick={() => setIsModalVendeurOpen(true)}  type="button" className="text-center text-sm p-1 mb-3 tracking-wider uppercase rounded-md button">Devenir vendeur</button> 
                       )}
 
                     <form method="GET" onSubmit={handleSearch} className=" ">
@@ -180,12 +180,12 @@ export default function Navbar() {
             {isModalVendeurOpen && (
             <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md bg-black bg-opacity-50" onClick={() => setIsModalVendeurOpen(false)}>
                   <div className="flex flex-col justify-center items-center gap-2" onClick={(event) => event.stopPropagation()}>
-                    <p className="font-bold text-2xl tracking-widest rounded-md uppercase">Vous souhaitez devenir vendeur ?</p>
-                    <p className="font-bold text-sm tracking-widest rounded-md uppercase">Un ticket sera automatiquement ouvert sur le discord.</p>
-                    <div className="flex gap-3">
-                    <button type="button" onClick={() => setIsModalVendeurOpen(false)} className="bg-white/70 text-black rounded-md font-bold p-2 w-52 uppercase mt-4 hover:scale-105 transition duration-500">Annuler</button>
-                    <button type="button" onClick={handleCreateChannel} className="bg-white text-black rounded-md font-bold p-2 w-52 uppercase mt-4 hover:scale-105 transition duration-500">Devenir vendeur</button>
-
+                    <p className="hidden sm:block font-bold sm:text-2xl tracking-widest rounded-md uppercase">Vous souhaitez devenir vendeur ?</p>
+                    <p className="sm:hidden font-bold text-2xl tracking-widest rounded-md uppercase">devenir vendeur ?</p>
+                    <p className="font-bold text-center text-sm tracking-widest rounded-md uppercase">Un ticket sera automatiquement ouvert sur le discord.</p>
+                    <div className="flex flex-col sm:flex-row gap-3">
+                    <button type="button" onClick={() => setIsModalVendeurOpen(false)} className="bg-white/70 text-black rounded-md font-bold p-2 w-52 uppercase mt-2 sm:mt-4 hover:scale-105 transition duration-500">Annuler</button>
+                    <button type="button" onClick={handleCreateChannel} className="bg-white text-black rounded-md font-bold p-2 w-52 uppercase sm:mt-4 hover:scale-105 transition duration-500">Devenir vendeur</button>
                     </div>
                   </div>
                 </div>
