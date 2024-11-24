@@ -92,10 +92,10 @@ export default function FormAsset() {
   }, [formData.categorieId, tags]); 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target; // Extraire le nom et la valeur de l'élément
+    const { name, value } = e.target; 
     setFormData((prevFormData) => ({
       ...prevFormData,
-      [name]: value, // Mettre à jour la propriété correspondante (tag1, tag2, etc.)
+      [name]: value, 
     }));
   };
 

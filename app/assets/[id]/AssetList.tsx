@@ -42,7 +42,7 @@ export default function AssetsList({ assets, tags, categorie }: AssetsListProps)
   const { categories } = useCategories();
 
   const [formCommande, setFormCommande] = useState({
-    category: "",
+    categoryCommande: "",
     description: "",
   });
   
@@ -102,9 +102,9 @@ export default function AssetsList({ assets, tags, categorie }: AssetsListProps)
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          category: formCommande.category,
+          category: formCommande.categoryCommande,
           description: formCommande.description,
-          channelName: `commande-${formCommande.category}`,
+          channelName: `commande-${formCommande.categoryCommande}`,
           userId: Number(id),
         }),
       });
@@ -120,7 +120,7 @@ export default function AssetsList({ assets, tags, categorie }: AssetsListProps)
 
       console.log("Canal créé avec succès:", data.channelId);
       setCommandAccept(true);
-      setFormCommande({ category: "", description: "" });
+      setFormCommande({ categoryCommande: "", description: "" });
     } catch (error) {
       console.error("Erreur lors de la création du canal Discord:", error);
     }
@@ -194,7 +194,7 @@ export default function AssetsList({ assets, tags, categorie }: AssetsListProps)
 
               <p className="text-xl tracking-widest font-bold text-center title">Commander un service personnalisé</p>
 
-              <select name="category" value={formCommande.category} onChange={handleChange} className="bg-white tracking-widest w-36 mx-auto sm:w-72 h-10 mt-3 text-sm sm:text-base text-black font-bold border-2 border-black rounded-md focus:border-purple hover:scale-105 transition-all duration-300">
+              <select name="categoryCommande" value={formCommande.categoryCommande} onChange={handleChange} className="bg-white tracking-widest w-36 mx-auto sm:w-72 h-10 mt-3 text-sm sm:text-base text-black font-bold border-2 border-black rounded-md focus:border-purple hover:scale-105 transition-all duration-300">
                       <option value="">Choisissez un domaine</option>
                       {categories.map(categorie => (
                         <option key={categorie.id_categorie} value={categorie.id_categorie}>{categorie.nom}</option>
