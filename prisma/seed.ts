@@ -14,12 +14,12 @@ const seed = async () => {
       data: { nom: 'Modélisation 3D' },
     });
 
-    const categorieGraphisme = await prisma.categorie.create({
-      data: { nom: 'Graphisme' },
-    });
-
     const categorieAnimation = await prisma.categorie.create({
       data: { nom: 'Animation 3D' },
+    });
+
+    const categorieGraphisme = await prisma.categorie.create({
+      data: { nom: 'Graphisme' },
     });
 
     const categorieAudios = await prisma.categorie.create({

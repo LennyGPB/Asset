@@ -3,21 +3,21 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql" // ou "postgresql" selon ta configuration
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model Medias {
   id_media Int      @id @default(autoincrement())
-  url      String   @db.VarChar(255)
-  assets   AssetMedia[]       // Relation avec Asset
+  url      String
+  assets   AssetMedia[] // Relation avec Asset
 }
 
 model Categorie {
   id_categorie Int      @id @default(autoincrement())
   nom          String   @db.VarChar(50)
   assets       Asset[]  @relation("appartient") // Relation avec Asset
-  tags         Tags[]    @relation("CategorieTags") // Relation avec Tags
+  tags         Tags[]   @relation("CategorieTags") // Relation avec Tags
 }
 
 model Tags {
@@ -30,30 +30,29 @@ model Tags {
 
 model Asset {
   id_asset         Int        @id @default(autoincrement())
-  file_url         String?     @db.VarChar(255)
-  //file_type        String?     @db.VarChar(50)
+  file_url         String?
   file_size        Decimal?    @db.Decimal(15, 2)
-  titre            String     @db.VarChar(50)
-  description      String     @db.Text
-  prix             Decimal    @db.Decimal(15, 2)
-  likes            Int        @default(0)
-  nb_dl            Int        @default(0)
-  slogan           String?    @db.VarChar(50)
-  createdAt        DateTime   @default(now())
-  updatedAt        DateTime   @updatedAt
-  image_couverture String?    @db.VarChar(255)
+  titre            String      @db.VarChar(50)
+  description      String      @db.Text
+  prix             Decimal     @db.Decimal(15, 2)
+  likes            Int         @default(0)
+  nb_dl            Int         @default(0)
+  slogan           String?     @db.VarChar(50)
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+  image_couverture String?     @db.VarChar(255)
 
   userId           Int?
   user             User?       @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   categorieId      Int?
-  categorie        Categorie? @relation("appartient", fields: [categorieId], references: [id_categorie], onDelete: Cascade)
+  categorie        Categorie?  @relation("appartient", fields: [categorieId], references: [id_categorie], onDelete: Cascade)
 
-  medias           AssetMedia[] 
+  medias           AssetMedia[]
   tags             AssetTags[]
   owners           Possession[]
   buyers           Buy[]
-  assetLikes       Likes[] 
+  assetLikes       Likes[]
 }
 
 model User {
@@ -65,12 +64,12 @@ model User {
   image         String?
   role          String    @default("user")
   stripeId      String?
-  accounts      Account[] 
-  sessions      Session[] 
-  assets        Asset[]   // Relation pour poster un Asset
-  ownedAssets   Possession[] // Relation pour les assets possédés
-  buyedAssets   Buy[] // Relation pour les assets achetés
-  likes         Likes[] 
+  accounts      Account[]
+  sessions      Session[]
+  assets        Asset[]        // Relation pour poster un Asset
+  ownedAssets   Possession[]   // Relation pour les assets possédés
+  buyedAssets   Buy[]          // Relation pour les assets achetés
+  likes         Likes[]
 }
 
 model Likes {
@@ -82,7 +81,7 @@ model Likes {
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   asset      Asset    @relation(fields: [assetId], references: [id_asset], onDelete: Cascade)
 
-  @@unique([userId, assetId])  // Empêche les doublons : un utilisateur ne peut liker un asset qu'une fois
+  @@unique([userId, assetId]) // Empêche les doublons : un utilisateur ne peut liker un asset qu'une fois
 }
 
 model AssetMedia {
@@ -95,10 +94,10 @@ model AssetMedia {
 }
 
 model AssetTags {
-  assetId  Int
-  tagId    Int
-  asset    Asset @relation(fields: [assetId], references: [id_asset], onDelete: Cascade)
-  tag      Tags  @relation(fields: [tagId], references: [id_tags], name: "TagAssets") 
+  assetId Int
+  tagId   Int
+  asset   Asset @relation(fields: [assetId], references: [id_asset], onDelete: Cascade)
+  tag     Tags  @relation(fields: [tagId], references: [id_tags], name: "TagAssets")
 
   @@id([assetId, tagId]) // Clé primaire composée
 }
@@ -116,12 +115,12 @@ model Buy {
 }
 
 model Possession {
-  id            Int    @id @default(autoincrement())
-  userId        Int
-  assetId       Int
+  id      Int  @id @default(autoincrement())
+  userId  Int
+  assetId Int
 
-  user          User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  asset         Asset  @relation(fields: [assetId], references: [id_asset], onDelete: Cascade)
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  asset   Asset  @relation(fields: [assetId], references: [id_asset], onDelete: Cascade)
 
   @@unique([userId, assetId])
 }
@@ -132,12 +131,12 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String?   @db.Text
-  access_token      String?   @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String?   @db.Text
+  id_token          String?
   session_state     String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -161,25 +160,3 @@ model VerificationToken {
 
   @@unique([identifier, token])
 }
-
-// model appartient {
-//   id_asset     Int
-//   id_categorie Int
-
-//   @@id([id_asset, id_categorie])
-// }
-
-// model est_lie {
-//   id_categorie Int
-//   id_tags      Int
-
-//   @@id([id_categorie, id_tags])
-// }
-
-// model possede {
-//   id_asset Int
-//   id_media Int
-
-//   @@id([id_asset, id_media])
-// }
-

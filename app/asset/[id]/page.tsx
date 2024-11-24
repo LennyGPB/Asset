@@ -116,7 +116,7 @@ export default function Asset() {
       alert("User ID is missing. Please log in.");
       return;
     }
-    const response = await fetch('https://asset-three.vercel.app/api/stripe/buyAsset', {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/stripe/buyAsset`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -126,7 +126,7 @@ export default function Asset() {
   
     if (response.ok) {
       const data = await response.json();
-      window.location.href = "https://asset-three.vercel.app/";
+      window.location.href = "https://assets-store.fr/";
     } else if (response.status === 401) {
       window.location.href = "/api/auth/signin";
     }
