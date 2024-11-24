@@ -197,7 +197,7 @@ export default function AssetsList({ assets, tags, categorie }: AssetsListProps)
               <select name="categoryCommande" value={formCommande.categoryCommande} onChange={handleChange} className="bg-white tracking-widest w-36 mx-auto sm:w-72 h-10 mt-3 text-sm sm:text-base text-black font-bold border-2 border-black rounded-md focus:border-purple hover:scale-105 transition-all duration-300">
                       <option value="">Choisissez un domaine</option>
                       {categories.map(categorie => (
-                        <option key={categorie.id_categorie} value={categorie.id_categorie}>{categorie.nom}</option>
+                        <option key={categorie.id_categorie} value={categorie.nom}>{categorie.nom}</option>
                       ))}
               </select>
 
