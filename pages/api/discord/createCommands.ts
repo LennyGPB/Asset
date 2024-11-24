@@ -86,13 +86,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     .setTitle(`Nouvelle commande : ${categoryCommande}`)
     .setDescription(`## __Description :__ \n\n ${description}`)
     .setFooter({ text: "Un membre de l'équipe va venir s'occuper de vous !" })
-    .addFields({ name: "Client ID", value: providerAccountId, inline: true })
     .setColor("#FFFFFF")
 
     const claimButton = new ButtonBuilder()
     .setStyle(ButtonStyle.Success)
     .setLabel("Prendre la commande")
-    .setCustomId(`claimButton`)
+    .setCustomId(JSON.stringify({ type: "claim", userId: providerAccountId }))
 
     const actionRow = new ActionRowBuilder<ButtonBuilder>().addComponents(claimButton);
 
