@@ -9,7 +9,7 @@ export default function S1_home() {
   return (
     <>
       <section className="md:wrapper mb-4 sm:mt-2">
-        <h1 className="text-5xl md:text-5xl text-white tracking-[10px] text-center mt-[110px] sm:mt-24 title">
+        <h1 className="text-5xl md:text-5xl text-white tracking-[10px] text-center mt-[110px] sm:mt-16 title">
           ASSETS STORE
         </h1>
 
