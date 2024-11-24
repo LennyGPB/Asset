@@ -142,7 +142,7 @@ export default function Navbar() {
                       )}
 
                     <form method="GET" onSubmit={handleSearch} className=" ">
-                        <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Recherche..." className="p-1 w-full  text-white bg-black border border-neutral-500 rounded-md placeholder:text-neutral-500 focus:border-purple" name="query"/>
+                        <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Recherche un Asset..." className="p-1 w-full  text-white bg-black border border-neutral-500 rounded-md placeholder:text-neutral-500 focus:border-purple" name="query"/>
                     </form>
 
                     {session && (
