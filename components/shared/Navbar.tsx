@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { usePathname } from 'next/navigation';
 import Link from "next/link";
+import { useCategories } from "@/contexts/CategoriesContext";
+
 
 function getRandomInt(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -14,9 +16,10 @@ function getRandomInt(min: number, max: number) {
 export default function Navbar() {
   const { data: session, status } = useSession();
   const id = session?.user.id;
+  const { categories } = useCategories();
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
-  const [categories, setCategories] = useState<Array<{ id_categorie: string; nom: string }>>([]);
+ // const [categories, setCategories] = useState<Array<{ id_categorie: string; nom: string }>>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isModalCategoryOpen, setIsModalCategoryOpen] = useState(false);
@@ -24,11 +27,11 @@ export default function Navbar() {
   const pathname = usePathname();
   
 
-  useEffect(() => {
-    fetch("/api/categories/categories")
-      .then((res) => res.json())
-      .then((data) => setCategories(data));
-  }, []);
+  // useEffect(() => {
+  //   fetch("/api/categories/categories")
+  //     .then((res) => res.json())
+  //     .then((data) => setCategories(data));
+  // }, []);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();

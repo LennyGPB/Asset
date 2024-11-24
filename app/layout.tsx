@@ -4,6 +4,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { SessionProvider } from "next-auth/react";
 import { LikesProvider } from "@/contexts/LikeContext";
+import { CategoriesProvider } from "@/contexts/CategoriesContext";
 import Footer from "@/components/shared/Footer";
 
 const geistSans = localFont({
@@ -36,6 +37,7 @@ export default function RootLayout({
       </head>
   <SessionProvider>
     <LikesProvider>
+      <CategoriesProvider>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${Venite.variable} antialiased`}
       >
@@ -47,6 +49,7 @@ export default function RootLayout({
           <Footer />
         </div>
       </body>
+      </CategoriesProvider>
     </LikesProvider>
   </SessionProvider>
 </html>

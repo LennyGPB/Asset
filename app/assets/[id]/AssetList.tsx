@@ -7,6 +7,8 @@ import Meteors from "@/components/magicui/meteors";
 import ScrollTextEffectOne from "@/components/shared/ScrollTextEffectOne";
 import Cardv2 from "@/components/shared/Cardv2";
 import Footer from "@/components/shared/Footer";
+import { useCategories } from "@/contexts/CategoriesContext";
+import { getSession } from "next-auth/react";
 
 interface Tag {
   id_tags: number;
@@ -30,11 +32,20 @@ interface AssetsListProps {
   categorie: string;
 }
 
+
 export default function AssetsList({ assets, tags, categorie }: AssetsListProps) {
   const [selectedTag, setSelectedTag] = useState<number | null>(null);
   const [selectedPrice, setSelectedPrice] = useState<number | null>(null);
   const [filteredAssets, setFilteredAssets] = useState<Asset[]>(assets);
+  const [commandCategory, setCommandCategory] = useState<string>("");
+  const [isOpen, setIsOpen] = useState(false);
+  const { categories } = useCategories();
 
+  const [formCommande, setFormCommande] = useState({
+    category: "",
+    description: "",
+  });
+  
   useEffect(() => {
     applyFilters();
   }, [selectedPrice, selectedTag]);
@@ -65,6 +76,50 @@ export default function AssetsList({ assets, tags, categorie }: AssetsListProps)
   const handleTagChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const tagId = Number(e.target.value);
     setSelectedTag(tagId);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setFormCommande({
+      ...formCommande,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleCreateCommands = async () => { 
+    try {
+      const session = await getSession();
+      if (!session) {
+        window.location.href = "/api/auth/signin";
+        return;
+      }
+      const id = session.user.id;
+      
+      const response = await fetch("/api/discord/createCommands", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          category: formCommande.category,
+          description: formCommande.description,
+          channelName: `commande-${formCommande.category}`,
+          userId: Number(id),
+        }),
+      });
+
+      if (response.status === 401) {
+        window.location.href = "/api/auth/signin";
+      }
+
+      const data = await response.json();
+      if (data.error) {
+        throw new Error(data.error);
+      }
+
+      console.log("Canal créé avec succès:", data.channelId);
+    } catch (error) {
+      console.error("Erreur lors de la création du canal Discord:", error);
+    }
   };
   
   return (
@@ -104,10 +159,7 @@ export default function AssetsList({ assets, tags, categorie }: AssetsListProps)
           <option value="1000">- 1000 euros</option>
         </select>
 
-        <select className="bg-white tracking-widest w-36 sm:w-48 h-10 text-sm sm:text-base text-black font-bold border-2 border-black rounded-md focus:border-purple hover:scale-105 transition-all duration-300" >
-          <option value="option1">Bien noté</option>
-          <option value="option2">Meilleurs Ventes</option>
-        </select>
+       <button type="button" onClick={() => setIsOpen(true)} className="bg-white font-bold sm:w-56 h-10 rounded-md tracking-widest hover:scale-105 transition-all duration-300">Service personnalisé</button>
 
       </div>
 
@@ -129,6 +181,36 @@ export default function AssetsList({ assets, tags, categorie }: AssetsListProps)
         )}
       </div>
       <Meteors number={30} />
+
+      {isOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md bg-black bg-opacity-50">
+          <div className="relative bg-white w-[600px] p-5 rounded-lg shadow-lg">
+
+            <form onSubmit={handleCreateCommands} className="flex flex-col gap-2">
+
+              <p className="text-xl tracking-widest font-bold text-center title">Commander un service personnalisé</p>
+
+              <select value={formCommande.category} onChange={handleChange} className="bg-white tracking-widest w-36 mx-auto sm:w-72 h-10 mt-3 text-sm sm:text-base text-black font-bold border-2 border-black rounded-md focus:border-purple hover:scale-105 transition-all duration-300" onChange={handleTagChange} value={selectedTag || ""}>
+                      <option value="">Choisissez un domaine</option>
+                      {categories.map(categorie => (
+                        <option key={categorie.id_categorie} value={categorie.id_categorie}>{categorie.nom}</option>
+                      ))}
+              </select>
+
+              <textarea placeholder="Décrivez votre demande" className="mx-auto mt-2 h-24 w-[430px] bg-white text-black p-2 rounded-lg border-2 border-black"></textarea>
+
+              <button type="submit" className="mt-2 bg-black text-white font-bold tracking-widest w-72 h-12 mx-auto rounded-md hover:scale-105 transition-all duration-300">Confirmer votre demande</button>
+              <p className="text-[10px] tracking-wider text-center">*Un canal privé sera crée sur le discord, un membre de l'équipe vous répondra dans les plus brefs délais.</p>
+            </form>
+
+            <button type="button" onClick={() => setIsOpen(false)} className="absolute top-[-12px] right-[-12px] text-black font-bold rounded-full text-2xl hover:scale-110 hover:rotate-180 transition duration-500">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-8 text-white bg-black rounded-full">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            </svg>
+            </button>
+          </div>
+        </div>
+      )}
     </>
      
   );
