@@ -22,7 +22,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ error: "Méthode non autorisée" });
   }
 
-  const { channelName, userId, category, description } = req.body;
+  const { channelName, userId, categoryCommande, description } = req.body;
 
   const session = await getServerSession(req, res, authOptions);
   if (!session) {
@@ -68,10 +68,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({ error: "Catégorie non valide" });
     }
 
-    // embed
+    // EMBED
     const embedService = new EmbedBuilder()
-    .setTitle(`Service : ${category}`)
-    .setDescription(`## Description : \n\n ${description}`)
+    .setTitle(`Nouvelle commande : ${categoryCommande}`)
+    .setDescription(`## __Description :__ \n\n ${description}`)
+    .setFooter({ text: "Un membre de l'équipe va venir s'occuper de vous !" })
     .setColor("#FFFFFF")
 
     const claimButton = new ButtonBuilder()

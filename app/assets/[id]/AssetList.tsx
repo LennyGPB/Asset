@@ -37,7 +37,7 @@ export default function AssetsList({ assets, tags, categorie }: AssetsListProps)
   const [selectedTag, setSelectedTag] = useState<number | null>(null);
   const [selectedPrice, setSelectedPrice] = useState<number | null>(null);
   const [filteredAssets, setFilteredAssets] = useState<Asset[]>(assets);
-  const [commandCategory, setCommandCategory] = useState<string>("");
+  const [commandAccept, setCommandAccept] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const { categories } = useCategories();
 
@@ -119,6 +119,7 @@ export default function AssetsList({ assets, tags, categorie }: AssetsListProps)
       }
 
       console.log("Canal créé avec succès:", data.channelId);
+      setCommandAccept(true);
       setFormCommande({ category: "", description: "" });
     } catch (error) {
       console.error("Erreur lors de la création du canal Discord:", error);
@@ -203,10 +204,11 @@ export default function AssetsList({ assets, tags, categorie }: AssetsListProps)
               <textarea name="description" value={formCommande.description} onChange={handleChange} placeholder="Décrivez votre demande" className="mx-auto mt-2 h-24 w-[430px] bg-white text-black p-2 rounded-lg border-2 border-black"></textarea>
 
               <button type="submit" className="mt-2 bg-black text-white font-bold tracking-widest w-72 h-12 mx-auto rounded-md hover:scale-105 transition-all duration-300">Confirmer votre demande</button>
+              {commandAccept && <p className="text-green-500 text-center">Votre demande a bien été envoyée sur le discord !</p>}
               <p className="text-[10px] tracking-wider text-center">*Un canal privé sera crée sur le discord, un membre de l'équipe vous répondra dans les plus brefs délais.</p>
             </form>
 
-            <button type="button" onClick={() => setIsOpen(false)} className="absolute top-[-12px] right-[-12px] text-black font-bold rounded-full text-2xl hover:scale-110 hover:rotate-180 transition duration-500">
+            <button type="button" onClick={() => { setIsOpen(false); setCommandAccept(false); }} className="absolute top-[-12px] right-[-12px] text-black font-bold rounded-full text-2xl hover:scale-110 hover:rotate-180 transition duration-500">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-8 text-white bg-black rounded-full">
               <path stroke-linecap="round" stroke-linejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
             </svg>
