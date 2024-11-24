@@ -38,6 +38,7 @@ export default function AssetsList({ assets, tags, categorie }: AssetsListProps)
   const [selectedPrice, setSelectedPrice] = useState<number | null>(null);
   const [filteredAssets, setFilteredAssets] = useState<Asset[]>(assets);
   const [commandAccept, setCommandAccept] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const { categories } = useCategories();
 
@@ -88,6 +89,7 @@ export default function AssetsList({ assets, tags, categorie }: AssetsListProps)
   
   const handleCreateCommands = async (e: React.FormEvent<HTMLFormElement>) => { 
     e.preventDefault();
+    setIsLoaded(true); // Démarre le chargement
     try {
       const session = await getSession();
       if (!session) {
@@ -119,13 +121,18 @@ export default function AssetsList({ assets, tags, categorie }: AssetsListProps)
       }
 
       console.log("Canal créé avec succès:", data.channelId);
-      setCommandAccept(true);
+
+      setCommandAccept(true); // Commande acceptée
       setFormCommande({ categoryCommande: "", description: "" });
+
     } catch (error) {
       console.error("Erreur lors de la création du canal Discord:", error);
+    } finally {
+      // Désactive le chargement une fois que commandAccept est vrai
+      setIsLoaded(false);
     }
-  };
-  
+};
+
   return (
     <>
       <Navbar />
@@ -163,7 +170,7 @@ export default function AssetsList({ assets, tags, categorie }: AssetsListProps)
           <option value="1000">- 1000 euros</option>
         </select>
 
-       <button type="button" onClick={() => setIsOpen(true)} className="bg-white font-bold sm:w-56 h-10 rounded-md tracking-widest hover:scale-105 transition-all duration-300">Service personnalisé</button>
+       <button type="button" onClick={() => setIsOpen(true)} className="border border-white text-white font-bold px-2 h-10 text-sm sm:text-md rounded-md tracking-widest hover:scale-105 hover:bg-white hover:text-black transition-all duration-300">Effectuer une commande personnalisée</button>
 
       </div>
 
