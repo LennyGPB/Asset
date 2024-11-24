@@ -102,7 +102,7 @@ export default function AssetsList({ assets, tags, categorie }: AssetsListProps)
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          category: formCommande.categoryCommande,
+          categoryCommande: formCommande.categoryCommande,
           description: formCommande.description,
           channelName: `commande-${formCommande.categoryCommande}`,
           userId: Number(id),

@@ -10,12 +10,7 @@ const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 const DISCORD_TOKEN = process.env.DISCORD_TOKEN;
 client.login(DISCORD_TOKEN);
 
-// Rôles autorisés à voir le canal privé
-const gradesAutorises = ["1298975634588176486", "1299090029276041298", "1310212858599964682"]; // Owner, Admin
-const rolePermissions = gradesAutorises.map((roleId) => ({
-  id: roleId.toString(),
-  allow: [PermissionsBitField.Flags.ViewChannel],
-}));
+
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") {
@@ -29,6 +24,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(401).json({ message: "Unauthorized" });
   }
 
+  let gradesAutorises: string[] = []; // Déclarez gradesAutorises en dehors des blocs conditionnels
+
+  if (categoryCommande === "Modélisation 3D" || categoryCommande === "Animation 3D") {
+    gradesAutorises = ["1298975634588176486", "1299090029276041298", "1310283704454611024"]; // Modélisateur
+  } else if (categoryCommande === "Graphisme") {
+    gradesAutorises = ["1298975634588176486", "1299090029276041298", "1310283740378828871"]; // Graphiste
+  } else if (categoryCommande === "Audios") {
+    gradesAutorises = ["1298975634588176486", "1299090029276041298", "1310283781348917288"]; // Sound Designer
+  } else if (categoryCommande === "Développement") {
+    gradesAutorises = ["1298975634588176486", "1299090029276041298", "1310283822126076025"]; // Développeur
+  }
+  
+  // Utilisez gradesAutorises pour générer les permissions
+  const rolePermissions = gradesAutorises.map((roleId) => ({
+    id: roleId.toString(),
+    allow: [PermissionsBitField.Flags.ViewChannel],
+  }));
+  
   try {
     const guildId = "1298971983437889588";
     const categoryId = "1308529203355848826";
@@ -73,12 +86,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     .setTitle(`Nouvelle commande : ${categoryCommande}`)
     .setDescription(`## __Description :__ \n\n ${description}`)
     .setFooter({ text: "Un membre de l'équipe va venir s'occuper de vous !" })
+    .addFields({ name: "Client ID", value: providerAccountId, inline: true })
     .setColor("#FFFFFF")
 
     const claimButton = new ButtonBuilder()
     .setStyle(ButtonStyle.Success)
     .setLabel("Prendre la commande")
-    .setCustomId(`claimButton_${providerAccountId}`)
+    .setCustomId(`claimButton`)
 
     const actionRow = new ActionRowBuilder<ButtonBuilder>().addComponents(claimButton);
 
