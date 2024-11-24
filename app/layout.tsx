@@ -6,7 +6,6 @@ import { SessionProvider } from "next-auth/react";
 import { LikesProvider } from "@/contexts/LikeContext";
 import Footer from "@/components/shared/Footer";
 
-
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -31,6 +30,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+       <head>
+        <link rel="icon" href="/medias/asset_logo4.png" />
+        <title>Assets - Store</title>
+      </head>
   <SessionProvider>
     <LikesProvider>
       <body
