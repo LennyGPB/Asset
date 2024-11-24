@@ -78,14 +78,16 @@ export default function AssetsList({ assets, tags, categorie }: AssetsListProps)
     setSelectedTag(tagId);
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setFormCommande({
-      ...formCommande,
-      [e.target.name]: e.target.value,
-    });
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.currentTarget; 
+    setFormCommande((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
-
-  const handleCreateCommands = async () => { 
+  
+  const handleCreateCommands = async (e: React.FormEvent<HTMLFormElement>) => { 
+    e.preventDefault();
     try {
       const session = await getSession();
       if (!session) {
@@ -117,6 +119,7 @@ export default function AssetsList({ assets, tags, categorie }: AssetsListProps)
       }
 
       console.log("Canal créé avec succès:", data.channelId);
+      setFormCommande({ category: "", description: "" });
     } catch (error) {
       console.error("Erreur lors de la création du canal Discord:", error);
     }
@@ -190,14 +193,14 @@ export default function AssetsList({ assets, tags, categorie }: AssetsListProps)
 
               <p className="text-xl tracking-widest font-bold text-center title">Commander un service personnalisé</p>
 
-              <select value={formCommande.category} onChange={handleChange} className="bg-white tracking-widest w-36 mx-auto sm:w-72 h-10 mt-3 text-sm sm:text-base text-black font-bold border-2 border-black rounded-md focus:border-purple hover:scale-105 transition-all duration-300">
+              <select name="category" value={formCommande.category} onChange={handleChange} className="bg-white tracking-widest w-36 mx-auto sm:w-72 h-10 mt-3 text-sm sm:text-base text-black font-bold border-2 border-black rounded-md focus:border-purple hover:scale-105 transition-all duration-300">
                       <option value="">Choisissez un domaine</option>
                       {categories.map(categorie => (
                         <option key={categorie.id_categorie} value={categorie.id_categorie}>{categorie.nom}</option>
                       ))}
               </select>
 
-              <textarea placeholder="Décrivez votre demande" className="mx-auto mt-2 h-24 w-[430px] bg-white text-black p-2 rounded-lg border-2 border-black"></textarea>
+              <textarea name="description" value={formCommande.description} onChange={handleChange} placeholder="Décrivez votre demande" className="mx-auto mt-2 h-24 w-[430px] bg-white text-black p-2 rounded-lg border-2 border-black"></textarea>
 
               <button type="submit" className="mt-2 bg-black text-white font-bold tracking-widest w-72 h-12 mx-auto rounded-md hover:scale-105 transition-all duration-300">Confirmer votre demande</button>
               <p className="text-[10px] tracking-wider text-center">*Un canal privé sera crée sur le discord, un membre de l'équipe vous répondra dans les plus brefs délais.</p>
