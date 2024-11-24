@@ -45,8 +45,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             // Générer le lien d'onboarding pour configurer le compte Stripe
             const accountLink = await stripe.accountLinks.create({
                 account: account.id,
-                refresh_url: 'https://localhost:3000/admin/users', // URL de retour en cas d'erreur
-                return_url: 'https://localhost:3000/admin/users', // URL après la configuration réussie
+                refresh_url: `${process.env.NEXT_PUBLIC_BASE_URL}/admin/users`, // URL de retour en cas d'erreur
+                return_url: `${process.env.NEXT_PUBLIC_BASE_URL}/admin/users`, // URL après la configuration réussie
                 type: 'account_onboarding',
             });
 
