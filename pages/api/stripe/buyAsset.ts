@@ -11,7 +11,6 @@ export const config = {
   },
 };
 
-
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
     const session = await getServerSession(req, res, authOptions);
@@ -48,6 +47,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       const stripeId = asset.user.stripeId;
 
+      // Vérifier si le compte Stripe du vendeur est activé pour les paiements
+      const account = await stripe.accounts.retrieve(stripeId);
+      if (!account.charges_enabled) {
+        console.error("Erreur : Le compte Stripe du vendeur n'est pas activé :", stripeId);
+        return res.status(400).json({ error: "Seller Stripe account is not enabled for charges." });
+      }
+
       // Créer une session Stripe
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
@@ -64,7 +70,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           },
         ],
         mode: 'payment',
-        success_url: `https://assets-store.fr/`,
+        success_url: `https://assets-store.fr/profil/${asset.user.id}/buy`,
         cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/cancel`,
         metadata: {
           assetId: assetId,
