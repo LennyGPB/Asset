@@ -14,10 +14,9 @@ export const config = {
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
-
     const session = await getServerSession(req, res, authOptions);
 
-    if(!session) {
+    if (!session) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
 
@@ -28,15 +27,30 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({ error: "Missing assetId or userId" });
     }
 
-
     try {
-      // Récupérer l'asset à acheter dans la base de données
+      // Récupérer l'asset et l'account associé avec le stripeId
       const asset = await prisma.asset.findUnique({
         where: { id_asset: Number(assetId) },
+        include: {
+          user: {
+            include: {
+              accounts: true, // Inclut tous les comptes associés à l'utilisateur
+            },
+          },
+        },
       });
 
-      if (!asset) {
-        return res.status(404).json({ error: 'Asset not found' });
+      if (!asset || !asset.user?.accounts) {
+        return res.status(404).json({ error: 'Asset or seller account not found' });
+      }
+
+      // Trouver le compte Stripe du vendeur
+      const stripeAccount = asset.user.accounts.find(
+        (account) => account.provider === 'stripe'
+      );
+
+      if (!stripeAccount || !stripeAccount.providerAccountId) {
+        return res.status(404).json({ error: 'Seller Stripe account not found' });
       }
 
       // Créer une session de paiement Stripe
@@ -55,11 +69,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           },
         ],
         mode: 'payment',
-        success_url: `https://assets-store.fr/`, // ${process.env.NEXT_PUBLIC_BASE_URL}/success?session_id={CHECKOUT_SESSION_ID}
+        success_url: `https://assets-store.fr/`,
         cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/cancel`,
         metadata: {
           assetId: assetId,  // Sauvegarder l'assetId pour référence future
           userId: userId,    // Sauvegarder l'userId
+        },
+        payment_intent_data: {
+          transfer_data: {
+            destination: stripeAccount.providerAccountId, // ID Stripe Connect du vendeur
+          },
+          application_fee_amount: Math.round(Number(asset.prix) * 100 * 0.12), 
         },
       });
 
@@ -74,3 +94,4 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 }
+
