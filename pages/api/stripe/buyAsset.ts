@@ -45,9 +45,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
 
       // Trouver le compte Stripe du vendeur
-      const stripeAccount = asset.user.accounts.find(
-        (account) => account.provider === 'stripe'
-      );
+      const stripeAccount = asset.user.accounts[0]; 
 
       if (!stripeAccount || !stripeAccount.providerAccountId) {
         return res.status(404).json({ error: 'Seller Stripe account not found' });
