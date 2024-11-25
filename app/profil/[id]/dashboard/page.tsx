@@ -21,7 +21,7 @@ export default function Dashboard() {
 
     useEffect(() => {
         const fetchSellerInfo = async () => {
-          const response = await fetch(`/api/stripe/sellerInfo?userId=${id}`);
+          const response = await fetch(`/api/stripe/sellerInfo/${id}`);
           const data = await response.json();
           setSellerInfo(data);
         };
