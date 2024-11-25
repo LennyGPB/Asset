@@ -29,45 +29,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     try {
-      // Log avant la récupération de l'asset
-      console.log("Recherche de l'asset avec ID :", assetId);
-
       const asset = await prisma.asset.findUnique({
         where: { id_asset: Number(assetId) },
         include: {
-          user: {
-            include: {
-              accounts: true, // Inclut les comptes associés
-            },
-          },
+          user: true, // Inclut directement l'utilisateur
         },
       });
-
-      // Log après récupération de l'asset
-      console.log("Asset récupéré :", asset);
 
       if (!asset) {
         console.error("Erreur : Asset introuvable pour ID :", assetId);
         return res.status(404).json({ error: "Asset not found" });
       }
 
-      if (!asset.user || !asset.user.accounts.length) {
-        console.error("Erreur : Aucun compte lié pour l'utilisateur :", asset.user?.id);
-        return res.status(404).json({ error: "Seller account not found" });
+      if (!asset.user?.stripeId) {
+        console.error("Erreur : stripeId invalide ou non configuré pour l'utilisateur :", asset.user?.id);
+        return res.status(404).json({ error: "Seller Stripe account is not valid or not configured." });
       }
 
-      // Log avant la récupération du compte Stripe
-      const stripeAccount = asset.user.accounts[0];
-      console.log("Compte Stripe récupéré :", stripeAccount);
+      const stripeId = asset.user.stripeId;
 
-      if (!stripeAccount || !stripeAccount.providerAccountId) {
-        console.error("Erreur : Compte Stripe introuvable pour l'utilisateur :", asset.user.id);
-        return res.status(404).json({ error: "Seller Stripe account not found" });
-      }
-
-      // Log avant la création de la session Stripe
-      console.log("Création de la session Stripe...");
-
+      // Créer une session Stripe
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
         line_items: [
@@ -91,9 +72,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         },
         payment_intent_data: {
           transfer_data: {
-            destination: stripeAccount.providerAccountId,
+            destination: stripeId, // Utilisation directe du stripeId
           },
-          application_fee_amount: Math.round(Number(asset.prix) * 100 * 0.12),
+          application_fee_amount: Math.round(Number(asset.prix) * 100 * 0.12), // Commission de 12%
         },
       });
 
