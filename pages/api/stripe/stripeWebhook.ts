@@ -16,24 +16,37 @@ export const config = {
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
+    // Vérifiez que la clé de signature Stripe est configurée
+    if (!process.env.STRIPE_WEBHOOK_SECRET) {
+      console.error('⚠️ STRIPE_WEBHOOK_SECRET n’est pas défini.');
+      return res.status(500).json({ error: 'Configuration Stripe incorrecte.' });
+    }
+
     const buf = await buffer(req);
     const sig = req.headers['stripe-signature'];
 
     let event: Stripe.Event;
 
     try {
-      event = stripe.webhooks.constructEvent(buf, sig as string, process.env.STRIPE_WEBHOOK_SECRET as string);
+      // Vérification de la signature Stripe
+      event = stripe.webhooks.constructEvent(buf, sig as string, process.env.STRIPE_WEBHOOK_SECRET);
     } catch (err: any) {
       console.error('⚠️ Erreur de vérification de la signature du webhook.', err.message);
       return res.status(400).send(`Webhook Error: ${err.message}`);
     }
 
+    // Gérer l'événement Stripe
     if (event.type === 'checkout.session.completed') {
       const session = event.data.object as Stripe.Checkout.Session;
 
       // Extraire les métadonnées nécessaires
       const assetId = session.metadata?.assetId;
       const userId = session.metadata?.userId;
+
+      if (!assetId || !userId) {
+        console.error('⚠️ Les métadonnées assetId ou userId sont manquantes.');
+        return res.status(400).json({ error: 'Les métadonnées assetId ou userId sont manquantes.' });
+      }
 
       console.log('assetId:', assetId);
       console.log('userId:', userId);
@@ -61,7 +74,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         res.status(500).json({ error: 'Erreur lors de la mise à jour de la possession de l’utilisateur' });
       }
     } else {
-      res.status(400).end();
+      console.log(`Événement non géré : ${event.type}`);
+      res.status(200).json({ received: true });
     }
   } else {
     res.setHeader('Allow', 'POST');
