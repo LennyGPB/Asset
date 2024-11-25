@@ -88,7 +88,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
   
     const mailOptions = {
-      from: '"Assets Store" <noreply@assets-store.com>', // Adresse email vérifiée dans Brevo
+      from: '"Assets Store" <capvertlenny@gmail.com>', // Adresse email vérifiée dans Brevo
       to: email, // Destinataire
       subject: 'Configurez votre compte Stripe',
       html: `
