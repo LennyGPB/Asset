@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { authOptions } from "@/lib/auth"; 
 import { getServerSession } from "next-auth";
 import stripe from "@/lib/stripe";
+import nodemailer from 'nodemailer';
 
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -47,9 +48,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           data: { stripeId: account.id },
         });
   
+        // Générer un lien d'onboarding pour configurer le compte Stripe
+        const accountLink = await stripe.accountLinks.create({
+          account: account.id,
+          refresh_url: `${process.env.NEXT_PUBLIC_BASE_URL}`,
+          return_url: `${process.env.NEXT_PUBLIC_BASE_URL}`,
+          type: 'account_onboarding',
+        });
+  
+        // Envoyer l'email au vendeur
+        await sendOnboardingEmail(updatedUser.email, accountLink.url);
+  
         // Répondre avec un message de confirmation
         return res.status(200).json({
-          message: `Stripe Standard account created. The seller should check their email (${updatedUser.email}) for further instructions.`,
+          message: `Stripe Standard account created. An email has been sent to ${updatedUser.email} with instructions.`,
         });
       } catch (error) {
         console.error("Error updating user or creating Stripe account:", error);
@@ -61,6 +73,38 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     } else {
       res.setHeader('Allow', ['PUT']);
       res.status(405).end(`Method ${req.method} Not Allowed`);
+    }
+  }
+  
+  // Fonction pour envoyer un email avec Nodemailer
+  async function sendOnboardingEmail(email: string, accountLinkUrl: string) {
+    const transporter = nodemailer.createTransport({
+      service: 'Gmail', // Utilisez votre service d'email, comme SendGrid, AWS SES, etc.
+      auth: {
+        user: process.env.EMAIL_USER, // Votre email
+        pass: process.env.EMAIL_PASS, // Votre mot de passe ou token d'application
+      },
+    });
+  
+    const mailOptions = {
+      from: '"Assets Store" <noreply@assets-store.com>', // Expéditeur
+      to: email, // Destinataire
+      subject: 'Configurez votre compte Stripe',
+      html: `
+        <p>Bonjour,</p>
+        <p>Vous avez été enregistré comme vendeur sur notre plateforme. Pour configurer votre compte Stripe et recevoir vos paiements, veuillez cliquer sur le lien ci-dessous :</p>
+        <p><a href="${accountLinkUrl}">Configurer mon compte Stripe</a></p>
+        <p>Si vous avez des questions, n'hésitez pas à nous contacter.</p>
+        <p>Cordialement,<br>L'équipe Assets Store</p>
+      `,
+    };
+  
+    try {
+      await transporter.sendMail(mailOptions);
+      console.log('Email d’onboarding envoyé avec succès à :', email);
+    } catch (error) {
+      console.error('Erreur lors de l’envoi de l’email d’onboarding :', error);
+      throw new Error('Failed to send onboarding email.');
     }
   }
 
