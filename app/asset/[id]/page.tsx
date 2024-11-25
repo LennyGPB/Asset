@@ -126,7 +126,7 @@ export default function Asset() {
   
     if (response.ok) {
       const data = await response.json();
-      //window.location.href = "https://assets-store.fr/";
+      window.location.href = data.url;
     } else if (response.status === 401) {
       window.location.href = "/api/auth/signin";
     }
