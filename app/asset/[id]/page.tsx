@@ -113,8 +113,7 @@ export default function Asset() {
 
   const handleBuyAsset = async () => {
     if (!userId) {
-      alert("User ID is missing. Please log in.");
-      return;
+      window.location.href = "/api/auth/signin";
     }
     const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/stripe/buyAsset`, {
       method: 'POST',
