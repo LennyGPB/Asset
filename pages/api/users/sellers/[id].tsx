@@ -5,7 +5,6 @@ import { getServerSession } from "next-auth";
 import stripe from "@/lib/stripe";
 import nodemailer from 'nodemailer';
 
-
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === "PUT") {
       const session = await getServerSession(req, res, authOptions);
@@ -76,18 +75,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
   }
   
-  // Fonction pour envoyer un email avec Nodemailer
+  // Fonction pour envoyer un email avec Brevo
   async function sendOnboardingEmail(email: string, accountLinkUrl: string) {
     const transporter = nodemailer.createTransport({
-      service: 'Gmail', // Utilisez votre service d'email, comme SendGrid, AWS SES, etc.
+      host: 'smtp-relay.brevo.com', // Serveur SMTP Brevo
+      port: 587, // Port recommandé pour Brevo
+      secure: false, // Utilisez true pour le port 465
       auth: {
-        user: process.env.EMAIL_USER, // Votre email
-        pass: process.env.EMAIL_PASS, // Votre mot de passe ou token d'application
+        user: process.env.EMAIL_USER, // Votre identifiant Brevo (adresse email)
+        pass: process.env.EMAIL_PASS, // Votre clé API Brevo
       },
     });
   
     const mailOptions = {
-      from: '"Assets Store" <noreply@assets-store.com>', // Expéditeur
+      from: '"Assets Store" <noreply@assets-store.com>', // Adresse email vérifiée dans Brevo
       to: email, // Destinataire
       subject: 'Configurez votre compte Stripe',
       html: `
@@ -100,8 +101,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     };
   
     try {
-      await transporter.sendMail(mailOptions);
-      console.log('Email d’onboarding envoyé avec succès à :', email);
+      const info = await transporter.sendMail(mailOptions);
+      console.log('Email d’onboarding envoyé avec succès à :', email, info);
     } catch (error) {
       console.error('Erreur lors de l’envoi de l’email d’onboarding :', error);
       throw new Error('Failed to send onboarding email.');
