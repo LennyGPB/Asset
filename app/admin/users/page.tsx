@@ -7,7 +7,7 @@ export default function AdminTags() {
 const [isModalOpen, setIsModalOpen] = useState(false);
 const [users, setUsers] = useState<Array<{ id: number; name: string; email: string; role: string }>>([]);
 const [selectedUser, setSelectedUser] = useState<{ id: number; name: string; email: string; role: string } | null>(null);
-const [stripeAccountLinkUrl, setStripeAccountLinkUrl] = useState<string | null>(null);
+//const [stripeAccountLinkUrl, setStripeAccountLinkUrl] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("/api/users/users")
@@ -20,20 +20,31 @@ const [stripeAccountLinkUrl, setStripeAccountLinkUrl] = useState<string | null>(
     setIsModalOpen(true);
   };
 
-  const handleConfirmSellerRole = () => {
-    try { 
-      fetch(`/api/users/sellers/${selectedUser?.id}`, {
+  const handleConfirmSellerRole = async () => {
+    if (!selectedUser?.id) {
+      console.error("Selected user ID is missing");
+      return;
+    }
+  
+    try {
+      const response = await fetch(`/api/users/sellers/${selectedUser?.id}`, {
         method: "PUT",
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setStripeAccountLinkUrl(data.accountLinkUrl);
-        console.log(data);
       });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to update user role");
+      }
+  
+      const data = await response.json();
+      console.log(data);
+      alert(data.message); // Affiche un message de confirmation
     } catch (error) {
       console.error("Error updating user role:", error);
+      alert("Une erreur est survenue : " + error); // Alerte en cas d'erreur
     }
-  }
+  };
+  
 
   return (
     <>
@@ -58,11 +69,11 @@ const [stripeAccountLinkUrl, setStripeAccountLinkUrl] = useState<string | null>(
           <button onClick={handleConfirmSellerRole} className="button bg-blue-500 text-white p-2 w-72 mt-3 rounded-lg text-center tracking-widest font-bold hover:scale-105 transition-all duration-500">
             Confirmer
           </button>
-          {stripeAccountLinkUrl && (
+          {/* {stripeAccountLinkUrl && (
             <a href={stripeAccountLinkUrl} target="_blank" className="button bg-green-500 text-white p-2 w-72 mt-3 rounded-lg text-center tracking-widest font-bold hover:scale-105 transition-all duration-500">
               Configurer le compte Stripe
             </a>
-          )}
+          )} */}
           <button
               type="button"
               onClick={() => setIsModalOpen(false)} // Ferme la modal
