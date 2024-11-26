@@ -94,8 +94,6 @@ export default function PrivacyPolicy() {
             - <strong>Adresse e-mail :</strong> [adresse e-mail officielle].<br />
         </p>
         </div>
-
-        <Footer />
         </>
     )
 }

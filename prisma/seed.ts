@@ -26,6 +26,10 @@ const seed = async () => {
       data: { nom: 'Audios' },
     });
 
+    const categorieDev = await prisma.categorie.create({
+      data: { nom: 'Développement' },
+    });
+
     // Créer des tags liés aux catégories
     const tag3DSkin = await prisma.tags.create({
       data: {

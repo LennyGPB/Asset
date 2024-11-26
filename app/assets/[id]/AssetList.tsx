@@ -170,7 +170,7 @@ export default function AssetsList({ assets, tags, categorie }: AssetsListProps)
           <option value="1000">- 1000 euros</option>
         </select>
 
-       <button type="button" onClick={() => setIsOpen(true)} className="border border-white text-white font-bold px-2 h-10 text-sm sm:text-md rounded-md tracking-widest hover:scale-105 hover:bg-white hover:text-black transition-all duration-300">Effectuer une commande personnalisée</button>
+      <button type="button" onClick={() => setIsOpen(true)} className="border border-white text-white font-bold px-2 h-10 text-sm sm:text-md rounded-md tracking-widest opacity-30 hover:scale-105 hover:bg-white hover:text-black transition-all duration-300" disabled>Effectuer une commande personnalisée</button>
 
       </div>
 

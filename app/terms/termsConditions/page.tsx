@@ -102,8 +102,6 @@ export default function termsConditions() {
             - <strong>Adresse e-mail :</strong> [adresse e-mail officielle].<br />
         </p>
         </div>
-
-        <Footer />
         </>
     )
 }

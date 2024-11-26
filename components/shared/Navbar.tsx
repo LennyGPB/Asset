@@ -198,8 +198,8 @@ export default function Navbar() {
             <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Recherchez un asset..." className="p-1 w-[270px] lg:w-[500px] mt-1 sm:mt-0 text-white bg-black border border-neutral-500 rounded-md placeholder:text-neutral-500 focus:border-purple" name="query"/>
           </form>
 
-          <div className="hidden sm:flex items-center gap-3">
-          <button onClick={() => setIsModalVendeurOpen(true)} type="button" className="hidden 2xl:block uppercase button rounded-md px-3 p-1 tracking-wider text-md mr-5 hover:scale-105 transition-transform duration-300 ease-in-out">
+          <div className="hidden sm:flex items-center gap-2">
+          <button onClick={() => setIsModalVendeurOpen(true)} type="button" className="hidden 2xl:block uppercase button rounded-md px-3 p-1 tracking-wider text-md mr-4 hover:scale-105 transition-transform duration-300 ease-in-out">
             Devenir vendeur
           </button>
             {session ? (

@@ -92,7 +92,6 @@ export default function LegalNotice() {
                 Toute reproduction ou utilisation non autorisée des éléments du Site est interdite.
             </p>
             </div>
-            <Footer />
         </>
     );
 }
