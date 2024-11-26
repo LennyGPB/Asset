@@ -21,21 +21,35 @@ export default function Dashboard() {
 
     useEffect(() => {
         const fetchSellerInfo = async () => {
-          const response = await fetch(`/api/stripe/sellerInfo/${id}`);
-          const data = await response.json();
-          setSellerInfo(data);
+          try {
+            const response = await fetch(`/api/stripe/sellerInfo/${id}`);
+            if (!response.ok) {
+              throw new Error(`Failed to fetch seller info: ${response.status}`);
+            }
+            const data = await response.json();
+            setSellerInfo(data);
+          } catch (error) {
+            console.error('Erreur lors de la récupération des informations vendeur :', error);
+          }
         };
-    
-        fetchSellerInfo();
+      
+        if (id) {
+          fetchSellerInfo();
+        }
       }, [id]);
 
+      useEffect(() => {
+        console.log('Seller Info:', sellerInfo);
+      }, [sellerInfo]);
+    
+      
 
     return (
         <>
 
         <ProfilHeader  id={id}  />
 
-        {sellerInfo && (
+        {/* {sellerInfo && (
             <div className="flex flex-col justify-center mt-7 gap-7">
                 <a href={`${sellerInfo.loginLink}`} className="text-center text-purple text-lg tracking-widest hover:scale-105 transition duraton-500">Accéder à votre dashboard Stripe complet.</a>
 
@@ -54,7 +68,7 @@ export default function Dashboard() {
                     </div>
                 </div>
             </div>
-        )}
+        )} */}
 
         </>
     );
