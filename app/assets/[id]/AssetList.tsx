@@ -5,7 +5,6 @@ import Navbar from "../../../components/shared/Navbar";
 import Meteors from "@/components/magicui/meteors";
 import ScrollTextEffectOne from "@/components/shared/ScrollTextEffectOne";
 import Cardv2 from "@/components/shared/Cardv2";
-import Footer from "@/components/shared/Footer";
 import { useCategories } from "@/contexts/CategoriesContext";
 import { getSession } from "next-auth/react";
 
