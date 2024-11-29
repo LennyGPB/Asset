@@ -1,8 +1,6 @@
 "use client";
 
-import Card from "@/components/shared/Card";
 import Navbar from "@/components/shared/Navbar";
-import { prisma } from "@/lib/prisma";
 import { useState, useEffect } from "react";
 import { getSession, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";

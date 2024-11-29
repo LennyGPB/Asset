@@ -4,7 +4,6 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import ProfilHeader from "@/components/shared/profil/profilHeader";
 import ProfilCardBuy from "@/components/shared/profil/profilCardBuy";
-import Footer from "@/components/shared/Footer";
 
 interface Asset {
   id_asset: number;

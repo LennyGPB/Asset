@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import Navbar from "../../../components/shared/Navbar";
-import Card from "../../../components/shared/Card";
 import { use, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Meteors from "@/components/magicui/meteors";
