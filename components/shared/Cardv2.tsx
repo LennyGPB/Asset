@@ -44,12 +44,12 @@ export default function Cardv2({ lienImage, titre, prix, description, id, likes}
       mouseX.set(e.clientX - left);
       mouseY.set(e.clientY - top);
     }}
-    className="group relative max-w-[320px] w-full overflow-hidden rounded-xl bg-neutral-900"
+    className="group relative w-full max-w-[320px] overflow-hidden rounded-xl bg-neutral-900 shadow-xl shadow-black/60"
   >
-    <div className="absolute right-5 top-0 h-px w-80 bg-gradient-to-l from-transparent via-white/30 via-10% to-transparent" />
+    <div className="absolute top-0 right-5 w-80 h-px bg-gradient-to-l from-transparent via-white/30 via-10% to-transparent" />
     
     <motion.div
-      className="pointer-events-none absolute -inset-px rounded-xl opacity-0 transition duration-300 group-hover:opacity-100"
+      className="absolute -inset-px pointer-events-none rounded-xl opacity-0 transition duration-300 group-hover:opacity-100"
       style={{
         background: useMotionTemplate`
           radial-gradient(200px circle at ${mouseX}px ${mouseY}px, rgba(51, 51, 51, 0.4), transparent 80%)
@@ -57,7 +57,7 @@ export default function Cardv2({ lienImage, titre, prix, description, id, likes}
       }}
     />
   
-    <div className="relative flex flex-col h-[410px]  rounded-xl border border-white/30 px-4 py-5 justify-between">
+    <div className="relative flex flex-col h-[410px] px-4 py-5 rounded-xl justify-between">
       {/* Contenu principal */}
       <div className="flex-grow space-y-2">
         <Image
@@ -65,42 +65,36 @@ export default function Cardv2({ lienImage, titre, prix, description, id, likes}
           alt="Product image"
           height={350}
           width={208}
-          className="rounded-xl h-52 w-full object-cover opacity-75 hover:opacity-100 transition duration-500"
+          className="w-full h-52 rounded-xl object-cover opacity-75 transition duration-500 hover:opacity-100"
         />
         <div className="flex flex-row items-center justify-between pt-2">
-          <h3 className="text-xl font-semibold text-neutral-200">
-            {titre.length > 16 ? `${titre.slice(0, 19)}..` : titre}
-          </h3>
+          <h3 className="text-xl font-semibold text-neutral-200">{titre.length > 16 ? `${titre.slice(0, 19)}..` : titre}</h3>
           <p className="text-[13px] text-neutral-300 select-none">{prix}$</p>
         </div>
-        <p className="text-sm leading-[1.5] text-neutral-400 pb-3">
+        <p className="pb-3 text-sm leading-[1.5] text-neutral-400">
           {description.length > 180 ? `${description.slice(0, 180)}...` : description}
         </p>
       </div>
   
       {/* Boutons en bas */}
-      <div className="flex justify-center gap-2 mt-4">
-        <Link href={`/asset/${id}`} className="inline-flex items-center justify-center gap-1 text-sm py-2 px-4 font-semibold bg-white text-black rounded-lg duration-300 hover:bg-white/70 w-full">
+      <div className="mt-4 flex justify-center gap-2">
+        <Link
+          href={`/asset/${id}`}
+          className="inline-flex w-full items-center justify-center gap-1 rounded-lg bg-white px-4 py-2 text-sm font-semibold text-black duration-300 hover:bg-white/70">
           Voir l'Asset
         </Link>
-        <button type="button" onClick={handleLikeClick} className="inline-flex items-center justify-center gap-1 text-sm px-1 font-semibold bg-white text-black rounded-lg duration-300 hover:bg-white/70 w-16">
+        <button
+          type="button"
+          onClick={handleLikeClick}
+          className="inline-flex w-16 items-center justify-center gap-1 rounded-lg bg-white px-1 text-sm font-semibold text-black duration-300 hover:bg-white/70">
           {isLiked ? likes + 1 : likes}
-          <svg
-            width="800px"
-            height="800px"
-            viewBox="0 0 16 16"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            className="size-3"
-          >
-            <path
-              d="M1.24264 8.24264L8 15L14.7574 8.24264C15.553 7.44699 16 6.36786 16 5.24264V5.05234C16 2.8143 14.1857 1 11.9477 1C10.7166 1 9.55233 1.55959 8.78331 2.52086L8 3.5L7.21669 2.52086C6.44767 1.55959 5.28338 1 4.05234 1C1.8143 1 0 2.8143 0 5.05234V5.24264C0 6.36786 0.44699 7.44699 1.24264 8.24264Z"
-              fill="#000000"
-            />
+          <svg width="800px" height="800px" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="size-3">
+            <path d="M1.24264 8.24264L8 15L14.7574 8.24264C15.553 7.44699 16 6.36786 16 5.24264V5.05234C16 2.8143 14.1857 1 11.9477 1C10.7166 1 9.55233 1.55959 8.78331 2.52086L8 3.5L7.21669 2.52086C6.44767 1.55959 5.28338 1 4.05234 1C1.8143 1 0 2.8143 0 5.05234V5.24264C0 6.36786 0.44699 7.44699 1.24264 8.24264Z" fill="#000000"/>
           </svg>
         </button>
       </div>
     </div>
   </div>
+  
   );
 }

@@ -4,7 +4,7 @@ import Link from "next/link";
 export default function Circles() {
   return (
     <>
-      <div className="flex justify-center gap-5 sm:gap-10 mt-7 sm:mt-10">
+      <div className="flex justify-center gap-5 sm:gap-10 mt-10 sm:mt-10">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"

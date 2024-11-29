@@ -53,7 +53,7 @@ export default function Cardv2({ lienImage, titre, prix, description, id, userId
       mouseX.set(e.clientX - left);
       mouseY.set(e.clientY - top);
     }}
-    className="group relative max-w-[320px] w-full overflow-hidden rounded-xl bg-neutral-900"
+    className="group relative max-w-[320px] w-full overflow-hidden rounded-xl bg-neutral-900 shadow-xl shadow-black/60"
     >
     <div className="absolute right-5 top-0 h-px w-80 bg-gradient-to-l from-transparent via-white/30 via-10% to-transparent" />
     
@@ -67,7 +67,7 @@ export default function Cardv2({ lienImage, titre, prix, description, id, userId
     />
   
   
-    <div className="relative flex flex-col h-[410px]  rounded-xl border border-white/30 px-4 py-5 justify-between">
+    <div className="relative flex flex-col h-[410px]  rounded-xl px-4 py-5 justify-between">
       {/* Contenu principal */}
       <p className="absolute z-10 text-black text-[12px] p-1 m-2 rounded-md tracking-wide font-bold bg-white/70">Dernière m.a.j : {update}</p>
       <div className="flex-grow space-y-2">
