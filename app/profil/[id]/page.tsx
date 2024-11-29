@@ -1,14 +1,8 @@
 "use client";
 
-import Meteors from "@/components/magicui/meteors";
-import Card from "@/components/shared/Card";
-import Navbar from "@/components/shared/Navbar";
-import ProfilCard from "@/components/shared/profil/profilCard";
-import ScrollTextEffectOne from "@/components/shared/ScrollTextEffectOne";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import ProfilHeader from "@/components/shared/profil/profilHeader";
-import Footer from "@/components/shared/Footer";
 
 interface Asset {
   id_asset: number;
