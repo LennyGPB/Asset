@@ -1,6 +1,5 @@
 "use client";
 
-import Card from "../Card";
 import { useState, useEffect } from "react";
 import Cardv2 from "../Cardv2";
 
