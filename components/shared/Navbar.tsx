@@ -252,7 +252,7 @@ export default function Navbar() {
           <button
             onClick={() => setIsModalVendeurOpen(true)}
             type="button"
-            className="hidden 2xl:block px-3 p-1 text-md tracking-wider uppercase text-sm button rounded-md mr-9 hover:scale-105 transition-transform duration-300 ease-in-out"
+            className="hidden 2xl:block px-3 p-1 text-md tracking-wider uppercase text-sm button rounded-md mr-5 hover:scale-105 transition-transform duration-300 ease-in-out"
           >
             Devenir vendeur
           </button>
@@ -282,7 +282,7 @@ export default function Navbar() {
             <button
               type="button"
               onClick={() => signIn('discord')}
-              className="p-1 w-40 text-center uppercase tracking-wider button rounded-md hover:scale-105 transition-transform duration-300 ease-in-out"
+              className="p-1 px-3 text-center text-sm tracking-wider uppercase button rounded-md hover:scale-105 transition-transform duration-300 ease-in-out"
             >
               Se connecter
             </button>
