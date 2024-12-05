@@ -33,8 +33,9 @@ export default function S2_home() {
 
   return (
     <>
-      <h1 className="mt-20 sm:mt-20 mb-7 sm:mb-10 text-4xl text-center text-white uppercase tracking-[10px] title"> Assets Populaire </h1>
-      <div className="flex flex-wrap justify-center gap-7 sm:gap-10">
+    {/* <div className="h-[1px] w-full bg-white mt-20" /> */}
+      <h1 className="mt-20  pb-8 pt-8 text-4xl text-center text-white uppercase tracking-[10px] title"> Assets Populaire </h1>
+      <div className="flex flex-wrap justify-center gap-7 sm:gap-10 pb-16">
         {popularAssets &&
           popularAssets.map((asset) => (
             <Cardv2

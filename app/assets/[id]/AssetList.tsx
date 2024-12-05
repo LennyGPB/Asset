@@ -156,7 +156,7 @@ export default function AssetsList({ assets, tags, categorie }: AssetsListProps)
       </svg>
 
       <select
-        className="w-36 sm:w-48 h-10 text-sm sm:text-base text-black font-bold bg-white border-2 border-black rounded-md tracking-widest focus:border-purple hover:scale-105 transition-all duration-300"
+        className="w-36 sm:w-48 h-10 text-sm sm:text-sm text-black font-bold bg-white border-2 border-black rounded-md tracking-widest focus:border-purple hover:scale-105 transition-all duration-300"
         onChange={handleTagChange}
         value={selectedTag || ""}
       >
@@ -169,7 +169,7 @@ export default function AssetsList({ assets, tags, categorie }: AssetsListProps)
       </select>
 
       <select
-        className="w-36 sm:w-48 h-10 text-sm sm:text-base text-black font-bold bg-white border-2 border-black rounded-md tracking-widest focus:border-purple hover:scale-105 transition-all duration-300"
+        className="w-36 sm:w-48 h-10 text-sm sm:text-sm text-black font-bold bg-white border-2 border-black rounded-md tracking-widest focus:border-purple hover:scale-105 transition-all duration-300"
         onChange={handlePriceChange}
       >
         <option value="10">- 10 euros</option>
@@ -180,7 +180,7 @@ export default function AssetsList({ assets, tags, categorie }: AssetsListProps)
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        className="px-2 h-10 text-sm sm:text-md font-bold text-white border border-white rounded-md tracking-widest opacity-30 hover:scale-105 hover:bg-white hover:text-black transition-all duration-300"
+        className="px-2 h-10 text-sm sm:text-sm font-bold text-white border border-white rounded-md tracking-widest opacity-30 hover:scale-105 hover:bg-white hover:text-black transition-all duration-300"
         disabled
       >
         Effectuer une commande personnalisée
@@ -189,7 +189,7 @@ export default function AssetsList({ assets, tags, categorie }: AssetsListProps)
 
     <div className="mt-9 sm:mb-5 flex flex-wrap justify-center gap-5 sm:gap-10">
       {filteredAssets.length === 0 ? (
-        <div className="mt-10 text-2xl text-center text-white tracking-widest">
+        <div className="mt-10 text-2xl text-center text-white tracking-widest p-10 border-b">
           Aucun asset trouvé
         </div>
       ) : (

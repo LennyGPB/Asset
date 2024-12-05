@@ -44,14 +44,14 @@ export default function ProfilHeader({ id }: { id: string }) {
             <div className="flex flex-col items-center sm:flex-row justify-center gap-5 mt-8">
             <Link 
               href={`/profil/${id}/post`}
-              className={`text-center text-lg p-2 w-64 rounded-lg font-bold tracking-widest border border-white/70 transition-all duration-300 ${pathname === `/profil/${id}/post` ? 'bg-white text-black' : ' text-white hover:scale-105'}`}
+              className={`text-center text-sm p-2 w-64 rounded-lg font-bold tracking-widest border border-white/70 transition-all duration-300 ${pathname === `/profil/${id}/post` ? 'bg-white text-black' : ' text-white hover:scale-105'}`}
             >
               Mes assets
             </Link>
     
             <Link 
               href={`/profil/${id}/buy`}
-              className={`text-center text-lg p-2 w-64 rounded-lg font-bold tracking-widest border border-white/70 transition-all duration-300 ${
+              className={`text-center text-sm p-2 w-64 rounded-lg font-bold tracking-widest border border-white/70 transition-all duration-300 ${
                 pathname === `/profil/${id}/buy` ? 'bg-white text-black' : 'text-white hover:scale-105'
               }`}
             >
@@ -60,7 +60,7 @@ export default function ProfilHeader({ id }: { id: string }) {
             {(role === 'admin' || role === 'seller') && (
               <Link 
                 href={sellerInfo?.loginLink || '#'}
-                className={`text-center text-lg p-2 w-64 rounded-lg font-bold tracking-widest border border-white/70 transition-all duration-300 ${
+                className={`text-center text-sm p-2 w-64 rounded-lg font-bold tracking-widest border border-white/70 transition-all duration-300 ${
                   pathname === `/profil/${id}/dashboard` ? 'bg-white text-black' : 'text-white hover:scale-105'
                 }`}
               >

@@ -14,25 +14,24 @@ function getRandomInt(min: number, max: number) {
 }
 
 export default function Navbar() {
+   // const [categories, setCategories] = useState<Array<{ id_categorie: string; nom: string }>>([]);
   const { data: session, status } = useSession();
   const id = session?.user.id;
   const { categories } = useCategories();
   const router = useRouter();
+  const pathname = usePathname();
+
+  // STATE
   const [searchQuery, setSearchQuery] = useState('');
- // const [categories, setCategories] = useState<Array<{ id_categorie: string; nom: string }>>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isModalCategoryOpen, setIsModalCategoryOpen] = useState(false);
   const [isModalVendeurOpen, setIsModalVendeurOpen] = useState(false);
-  const pathname = usePathname();
+  const [successMessage, setSuccessMessage] = useState("");
+
+  // CHARGEMENT 
+  const [loadingVendeur, setLoadingVendeur] = useState(false);
   
-
-  // useEffect(() => {
-  //   fetch("/api/categories/categories")
-  //     .then((res) => res.json())
-  //     .then((data) => setCategories(data));
-  // }, []);
-
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim() !== '') {
@@ -42,51 +41,56 @@ export default function Navbar() {
   };;
 
   const handleCreateChannel = async () => {
-    const randomNum = getRandomInt(1, 1000); 
-    try {
-      const response = await fetch("/api/discord/createChannel", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          channelName: `vendeur-${id}-${randomNum}`,
-          userId: Number(id),
-        }),
-      });
-
-      if (response.status === 401) {
-        window.location.href = "/api/auth/signin";
-      }
-
-      const data = await response.json();
-      if (data.error) {
-        throw new Error(data.error);
-      }
-
-      console.log("Canal créé avec succès:", data.channelId);
-    } catch (error) {
-      console.error("Erreur lors de la création du canal Discord:", error);
-    }
+      const randomNum = getRandomInt(1, 1000); 
+      setLoadingVendeur(true);
+      try {
+        const response = await fetch("/api/discord/createChannel", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            channelName: `vendeur-${id}-${randomNum}`,
+            userId: Number(id),
+          }),
+        });
+    
+        if (response.status === 401) {
+          window.location.href = "/api/auth/signin";
+        }
+    
+        const data = await response.json();
+        if (data.error) {
+          throw new Error(data.error);
+        }
+    
+        console.log("Canal créé avec succès:", data.channelId);
+      } catch (error) {
+        console.error("Erreur lors de la création du canal Discord:", error);
+      } finally {
+        setLoadingVendeur(false); 
+        setSuccessMessage("Le canal a été créé avec succès !");
+        setTimeout(() => setSuccessMessage(""), 5000);
+    };
   };
 
   return (
     <>
-      <nav className="z-50 mt-4 mx-3 sm:mx-14 flex flex-col text-white">
-      <div className="relative flex justify-center sm:justify-between gap-3 sm:items-center">
+      <nav className="z-50 mt-4 flex flex-col text-white">
+      <div className="mx-3 sm:mx-14 relative flex justify-center sm:justify-between gap-3 sm:items-center">
         <Link href="/" className="flex items-center gap-5">
           <Image
             src="/medias/asset_logo4.png"
             alt="Logo"
-            width={37}
-            height={37}
+            width={30}
+            height={30}
             className="hidden sm:block"
           />
-          <p className="hidden sm:block text-md tracking-widest text-white neon-effect">by InTheGleam</p>
+          {/* <p className="hidden sm:block text-md tracking-widest text-white neon-effect">by InTheGleam</p> */}
         </Link>
 
         {/* Menu mobile */}
-        <div className="fixed z-50 flex items-center justify-center gap-3 sm:hidden">
+        <div className="fixed z-50 flex items-center justify-between px-4 w-screen gap-3 sm:hidden">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -105,7 +109,7 @@ export default function Navbar() {
             <button
               type="button"
               onClick={() => setIsModalCategoryOpen(true)}
-              className="p-1 w-[265px] uppercase tracking-widest font-semibold text-white bg-black border border-neutral-500 rounded-md shadow-sm shadow-white/10 placeholder:text-neutral-500 focus:border-purple"
+              className="p-1 px-2 w-fit uppercase tracking-widest font-semibold text-white text-sm bg-gradient-to-t from-purple to-purpleLight border border-neutral-500 rounded-md shadow-sm shadow-white/10 placeholder:text-neutral-500 focus:border-purple"
             >
               Consulter les Assets
             </button>
@@ -207,8 +211,30 @@ export default function Navbar() {
           </div>
         </div>
 
+          {/* Modal Devenir Vendeur */}
+          {isModalVendeurOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-md" onClick={() => setIsModalVendeurOpen(false)}>
+            <div className="flex flex-col items-center justify-center " onClick={(event) => event.stopPropagation()}>
+              <p className="text-md text-center sm:text-2xl font-bold tracking-widest uppercase rounded-md">Vous souhaitez devenir vendeur ?</p>
+              <p className="text-xs tracking-wide rounded-md mb-5">*Un canal privé sera crée sur le discord, veuillez vous y rendre.</p>
+              <button
+                onClick={handleCreateChannel}
+                type="button"
+                className="w-96 p-2 text-lg font-bold text-center text-black uppercase bg-white tracking-widest rounded-md shadow-md shadow-white/20 hover:scale-105 transition-transform duration-300 ease-in-out"
+              >
+                 {loadingVendeur ? "Création en cours..." : "Confirmer"}
+              </button>
+              {successMessage && (
+              <p className="mt-3 text-sm font-bold text-green-500">
+                {successMessage}
+              </p>
+            )}
+            </div>
+          </div>
+        )}
+
         {/* Input recherche */}
-        <form
+        {/* <form
           method="GET"
           onSubmit={handleSearch}
           className="hidden justify-center lg:block lg:absolute lg:left-1/2 lg:transform lg:-translate-x-1/2 sm:flex"
@@ -217,21 +243,22 @@ export default function Navbar() {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Recherchez un asset..."
-            className="w-[270px] lg:w-[500px] p-1 mt-1 sm:mt-0 text-white bg-black border border-neutral-500 rounded-md placeholder:text-neutral-500 focus:border-purple"
+            placeholder="Rechercher un asset..."
+            className="w-[270px] lg:w-[400px] p-1 pl-4 mt-1 sm:mt-0 text-white rounded-md placeholder:text-neutral-500 focus:border-purple"
           />
-        </form>
+        </form> */}
 
         <div className="hidden items-center gap-2 sm:flex">
           <button
             onClick={() => setIsModalVendeurOpen(true)}
             type="button"
-            className="hidden 2xl:block px-3 p-1 text-md tracking-wider uppercase button rounded-md mr-4 hover:scale-105 transition-transform duration-300 ease-in-out"
+            className="hidden 2xl:block px-3 p-1 text-md tracking-wider uppercase text-sm button rounded-md mr-9 hover:scale-105 transition-transform duration-300 ease-in-out"
           >
             Devenir vendeur
           </button>
           {session ? (
             <div className="flex items-center gap-3">
+              <p className="ml-2">{session.user.name}</p>
               <button
                 type="button"
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -244,14 +271,10 @@ export default function Navbar() {
                   className="w-10 h-10 border-2 border-white rounded-full sm:hover:scale-110 transition-transform duration-300 ease-in-out"
                 />
               </button>
-              <p className="ml-2">{session.user.name}</p>
+              
               <Link href={`/save/${session.user.id}`}>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 512 512"
-                  className="size-7 button p-1 rounded-full hover:scale-110 transition-transform duration-300 ease-in-out"
-                >
-                  <path d="M47.6 300.4L228.3 469.1c7.5 7 17.4 10.9 27.7 10.9s20.2-3.9 27.7-10.9L464.4 300.4c30.4-28.3 47.6-68 47.6-109.5v-5.8c0-69.9-50.5-129.5-119.4-141C347 36.5 300.6 51.4 268 84L256 96 244 84c-32.6-32.6-79-47.5-124.6-39.9C50.5 55.6 0 115.2 0 185.1v5.8c0 41.5 17.2 81.2 47.6 109.5z" />
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-8 text-purpleLight rounded-full hover:scale-110 transition-transform duration-300 ease-in-out">
+                  <path d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z" />
                 </svg>
               </Link>
             </div>
@@ -268,31 +291,31 @@ export default function Navbar() {
       </div>
 
     {isDropdownOpen && (
-      <div className="absolute top-14 right-0 mt-2 w-40 sm:w-48 mr-2 sm:mr-28 bg-white text-black rounded-lg shadow-lg z-50">
+      <div className="absolute top-16 backdrop-blur-sm right-0 mt-2 w-40 sm:w-48 mr-2 sm:mr-28 bg-gradient-to-t from-purple to-purpleLight text-white rounded-lg shadow-lg z-50">
         <ul className="flex flex-col">
-          <li className="p-2 hover:bg-gray-100">
+          <li className="p-2 hover:bg-gray-100 hover:text-black rounded-t-lg">
             <a href={`/profil/${session?.user.id}/post`}>Mon profil</a>
           </li>
           {session?.user.role === 'admin' && (
-            <li className="p-2 hover:bg-gray-100">
+            <li className="p-2 hover:bg-gray-100 hover:text-black">
               <Link href="/admin">Administration</Link>
             </li>
           )}
           {(session?.user.role === 'admin' || session?.user.role === 'seller') && (
-            <li className="p-2 hover:bg-gray-100">
+            <li className="p-2 hover:bg-gray-100 hover:text-black">
               <Link href="/formAsset">Créer un Asset</Link>
             </li>
           )}
-          <li className="p-2 hover:bg-gray-100">
+          <li className="p-2 hover:bg-gray-100 hover:text-black">
             <button onClick={() => setIsModalVendeurOpen(true)} type="button">
               Devenir vendeur
             </button>
           </li>
-          <li className="p-2 sm:hidden hover:bg-gray-100">
+          <li className="p-2 sm:hidden hover:bg-gray-100 hover:text-black">
             <Link href={`/save/${session?.user.id}`}>Mes favoris</Link>
           </li>
           <hr className="border-gray-300" />
-          <li className="p-2 hover:bg-gray-100">
+          <li className="p-2 hover:bg-gray-100 hover:text-black rounded-b-lg">
             <button type="button" onClick={() => signOut()}>
               Se déconnecter
             </button>
@@ -301,22 +324,47 @@ export default function Navbar() {
       </div>
     )}
 
-    <div className="hidden sm:flex justify-center gap-10 mt-8">
-      {categories.map((category) => (
-        <Link
-          href={`/assets/${category.id_categorie}`}
-          key={category.id_categorie}
-          type="button"
-          className={`text-lg uppercase tracking-wider hover:scale-110 transition-transform duration-300 ease-in-out ${
-            pathname === `/assets/${category.id_categorie}`
-              ? 'neon-effect'
-              : 'text-gray-300'
-          }`}
-        >
-          {category.nom}
-        </Link>
-      ))}
+<div className="hidden sm:flex justify-between items-center gap-10 mt-4 py-2 border-white/50 backdrop-blur-sm border-t px-12">
+  {categories.map((category) => (
+    <Link
+      href={`/assets/${category.id_categorie}`}
+      key={category.id_categorie}
+      type="button"
+      className={`text-sm mt-1 uppercase tracking-wider hover:scale-110 transition-transform duration-300 ease-in-out ${
+        pathname === `/assets/${category.id_categorie}` ? 'neon-effect' : 'text-gray-300'
+      }`}
+    >
+      {category.nom}
+    </Link>
+  ))}
+
+  <form method="GET" onSubmit={handleSearch} className="hidden lg:flex items-center justify-center gap-2 mt-1">
+    <div className="relative flex items-center">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        strokeWidth="1.5"
+        stroke="currentColor"
+        className="w-5 h-5 text-neutral-500 absolute left-2"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+        />
+      </svg>
+      <input
+        type="text"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        placeholder="Rechercher un asset..."
+        className="w-[270px] lg:w-[300px] pl-8 p-1 text-white rounded-md bg-transparent placeholder:text-neutral-500 border-0 focus:border-white"
+      />
     </div>
+  </form>
+</div>
+
   </nav>
 
     </>

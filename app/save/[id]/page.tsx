@@ -52,7 +52,7 @@ export default function Save({params}: {params: {id: string}}) {
 
       <div className="flex flex-wrap justify-center mt-10 sm:gap-10">
         {assetsLiked.length === 0 ? (
-          <div>Aucun asset trouvé</div>
+          <div className="mt-10 text-2xl text-center text-white tracking-widest p-10 border-b">Aucun asset trouvé</div>
         ) : (
           assetsLiked.map((asset) => (
             <Cardv2
