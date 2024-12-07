@@ -291,7 +291,7 @@ export default function Navbar() {
       </div>
 
     {isDropdownOpen && (
-      <div className="absolute top-16 backdrop-blur-sm right-0 mt-2 w-40 sm:w-48 mr-2 sm:mr-28 bg-gradient-to-t from-purple to-purpleLight text-white rounded-lg shadow-lg z-50">
+      <div className="absolute top-16 backdrop-blur-sm right-0 mt-2 w-40 sm:w-48 mr-2 sm:mr-20 bg-gradient-to-t from-purple to-purpleLight text-white rounded-lg shadow-lg z-50">
         <ul className="flex flex-col">
           <li className="p-2 hover:bg-gray-100 hover:text-black rounded-t-lg">
             <a href={`/profil/${session?.user.id}/post`}>Mon profil</a>

@@ -34,6 +34,8 @@ export default function Asset() {
   const userId = session.data?.user?.id;
   const [asset, setAsset] = useState<Asset | null>(null);
   const [medias, setMedias] = useState<string[]>([]);
+  const [buyLoading, setBuyLoading] = useState(false);
+  const [messageLoading, setMessageLoading] = useState("Acheter cet asset");
   const params = useParams();
 
   if (!params || !params.id) {
@@ -111,25 +113,38 @@ export default function Asset() {
   }
 
   const handleBuyAsset = async () => {
+
     if (!userId) {
       window.location.href = "/api/auth/signin";
     }
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/stripe/buyAsset`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ assetId: id, userId: userId }),
-    });
-  
-    if (response.ok) {
-      const data = await response.json();
-      window.location.href = data.url;
-    } else if (response.status === 401) {
-      window.location.href = "/api/auth/signin";
+
+    setBuyLoading(true);
+
+    try{
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/stripe/buyAsset`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ assetId: id, userId: userId }),
+      });
+    
+      if (response.ok) {
+        const data = await response.json();
+        window.location.href = data.url;
+      } else if (response.status === 401) {
+        window.location.href = "/api/auth/signin";
+      }
+      else{
+        console.error('Erreur lors de l’achat de l’asset');
+      }
+    } catch (error) {
+      console.error(error);
     }
-    else{
-      console.error('Erreur lors de l’achat de l’asset');
+    finally {
+      setBuyLoading(false);
+      setMessageLoading("Redirection en cours...");
+      setTimeout(() => setMessageLoading("Acheter cet asset"), 10000);
     }
   };
   
@@ -191,11 +206,11 @@ export default function Asset() {
           <div className="flex flex-col ">
             <div className="bg-white rounded-md mx-auto w-[345px] sm:w-96 h-36 px-10">
               <p className="text-center text-2xl uppercase tracking-widest font-bold mt-2">
-                {asset.titre}
+                {asset.titre.length > 19 ? `${asset.titre.slice(0, 19)}...` : asset.titre}
               </p>
-              <p className="text-center text-sm tracking-wide mt-1 px-3">
-                {asset.slogan}
-              </p>
+                <p className="text-center sm:w-80 text-sm tracking-wide mt-2 px-3 break-words"> 
+                  {asset.slogan.length > 110 ? `${asset.slogan.slice(0, 110)}...` : asset.slogan}  
+                </p>
 
               <div className=" flex justify-center ">
                 <button
@@ -203,7 +218,7 @@ export default function Asset() {
                   type="button"
                   className="absolute bottom-[203px] sm:bottom-56 tracking-widest button p-2 rounded-lg text-white font-bold uppercase hover:scale-105 transition duration-300"
                 >
-                  Acheter cet asset
+                   {messageLoading}
                 </button>
               </div>
             </div>
@@ -220,10 +235,10 @@ export default function Asset() {
             </div>
 
             <div className="flex items-center mx-auto w-[345px] sm:w-96 bg-white mt-4 rounded-lg">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-9 ml-1">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-9 ml-1">
+              <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-1.902 7.098a3.75 3.75 0 0 1 3.903-.884.75.75 0 1 0 .498-1.415A5.25 5.25 0 0 0 8.005 9.75H7.5a.75.75 0 0 0 0 1.5h.054a5.281 5.281 0 0 0 0 1.5H7.5a.75.75 0 0 0 0 1.5h.505a5.25 5.25 0 0 0 6.494 2.701.75.75 0 1 0-.498-1.415 3.75 3.75 0 0 1-4.252-1.286h3.001a.75.75 0 0 0 0-1.5H9.075a3.77 3.77 0 0 1 0-1.5h3.675a.75.75 0 0 0 0-1.5h-3c.105-.14.221-.274.348-.402Z" clip-rule="evenodd" />
             </svg>
-              <p className="p-2 tracking-wide font-bold">{asset.prix}$</p>
+              <p className="p-2 tracking-wide font-bold">{asset.prix} €</p>
             </div>
 
             <div className="flex mt-4 gap-2">
